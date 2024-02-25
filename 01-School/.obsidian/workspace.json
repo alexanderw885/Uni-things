@@ -1,0 +1,183 @@
+{
+  "main": {
+    "id": "0d5cc653d24bd407",
+    "type": "split",
+    "children": [
+      {
+        "id": "aa0f1580a06b40c5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b5828da340d6d0b9",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0ba260dd5d9f0104",
+    "type": "split",
+    "children": [
+      {
+        "id": "f2e9b5c91ec6c971",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d12ebb24d7b68e15",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "26ba9bd3cda44e2e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "69695e512f3c93f8",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e5dfea00a5982c0d",
+    "type": "split",
+    "children": [
+      {
+        "id": "587b5b5d470f2ce6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "564510ec0a18a1d4",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "49de6fb61fb91a06",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "6c826aca8fe5a56f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "89ac88ebbee612ca",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "b5828da340d6d0b9",
+  "lastOpenFiles": [
+    "Algorithms and data structures/Photos/Pasted image 20240129124207.png",
+    "Algorithms and data structures/Photos/Pasted image 20240129124103.png",
+    "Algorithms and data structures/Photos",
+    "Algorithms and data structures/weighted graph.md",
+    "Algorithms and data structures/Vertex cut.md",
+    "Algorithms and data structures/Union-find Data Structure.md",
+    "Algorithms and data structures/trees.md",
+    "Algorithms and data structures/stacks.md",
+    "Algorithms and data structures/spanning trees.md",
+    "Algorithms and data structures/pointer.md",
+    "Algorithms and data structures/linked lists.md",
+    "Algorithms and data structures/Greedy algorithms.md",
+    "Algorithms and data structures/graphs.md",
+    "Algorithms and data structures/Dynamic programming.md",
+    "Algorithms and data structures/depth first search.md",
+    "Algorithms and data structures/breadth first search.md",
+    "Algorithms and data structures/binary search trees.md",
+    "Algorithms and data structures/Big-oh O(n).md",
+    "Algorithms and data structures/arrays.md",
+    "Algorithms and data structures/226 intro.md",
+    "Algorithms and data structures/01 Types of lists.md",
+    "Algorithms and data structures",
+    "Technical writing/Writing Strong Paragraphs.md",
+    "Technical writing/Technical Writing Intro.md",
+    "Technical writing/Project proposal memo.md",
+    "Technical writing/ONC project Q&A.md",
+    "Technical writing/IEEE.md",
+    "Technical writing/Feedback on student presentations.md",
+    "Technical writing",
+    "Statistics/Images/Pasted image 20240117105211.png",
+    "Statistics/Images/Pasted image 20240117104746.png",
+    "Statistics/Images/Pasted image 20240117104525.png",
+    "Statistics/Images/Pasted image 20240117103903.png",
+    "Statistics/Images/Pasted image 20240116104711.png",
+    "Statistics/Images/Pasted image 20240116104039.png",
+    "Statistics/Images/Pasted image 20240116104518.png",
+    "Statistics/Images",
+    "Statistics/Variance.md",
+    "Statistics"
+  ]
+}

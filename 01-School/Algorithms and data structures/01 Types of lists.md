@@ -1,0 +1,15 @@
+
+- [[arrays]]
+- [[linked lists]]
+- [[stacks]]
+- [[queues]]
+- [[priority queues]]
+- [[trees]]
+	- [[binary search trees]]
+	- [[heaps]]
+	- [[two-three trees]]
+	- [[red-black trees]]
+- [[graphs]]
+	- [[spanning trees]]
+	- [[weighted graph]] 
+

@@ -1,0 +1,17 @@
+
+- Population
+	- collection of all objects we wish to study, often far too big to study each object
+- sample
+	- subset of population we can study to learn about population
+- Variable
+	- characteristic that may vary between objects in population
+- Parameter
+	- Measurement of whole population
+- Statistic
+	- Measurement of just the sample
+- Sample size
+	- number of observations
+- [mean, median, and mode](Mean,%20Median,%20Mode) 
+- [[variance and deviation]] 
+- [[coefficient of variation]]
+- 
