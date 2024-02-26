@@ -22,3 +22,4 @@ BubbleUp(n):
 end
 ```
 
+you can only remove the root of a heap, and in order to do that while maintaining the heap, you first swap the root and the last-added element, then bubble down the last element
