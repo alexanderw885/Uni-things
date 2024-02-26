@@ -90,14 +90,14 @@ thus, $F(n)\in{O}(n)$
 
 ## Shortest Path Problem 
 
-Given directed [[graph]] $G(V,E)$ with edge weight,
+Given directed [graph](graphs) $G(V,E)$ with edge weight,
 find the shortest path from vertex $u$ to vertex  $v$
 
 
 #### Greedy algorithm is bad
 The optimal short-term solution is **not** the optimal long-term solution.
 
-Depth first search  going down edges of least weight.
+[[depth first search]]  going down edges of least weight.
 Very slow, can go down every single path before finding a path to the destination $v$.
 Also not guaranteed to work, some paths are not the shortest path possible.
 ex: this algorithm would choose a path with weights $(1,100)$ instead of $(2)$

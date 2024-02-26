@@ -13,3 +13,4 @@ operations:
 	- Returns number of items in stack
 
 
+very fast, but also very limited.

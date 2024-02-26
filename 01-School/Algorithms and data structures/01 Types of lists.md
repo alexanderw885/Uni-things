@@ -1,14 +1,12 @@
-
+far from complete, just relevant types of list that come up in class
 - [[arrays]]
 - [[linked lists]]
 - [[stacks]]
 - [[queues]]
 - [[priority queues]]
 - [[trees]]
-	- [[binary search trees]]
+	- [[binary trees]]
 	- [[heaps]]
-	- [[two-three trees]]
-	- [[red-black trees]]
 - [[graphs]]
 	- [[spanning trees]]
 	- [[weighted graph]] 

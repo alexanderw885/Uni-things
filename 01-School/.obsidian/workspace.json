@@ -8,14 +8,43 @@
         "type": "tabs",
         "children": [
           {
-            "id": "b5828da340d6d0b9",
+            "id": "b3ace204fbba9b03",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "Algorithms and data structures/01 Types of lists.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "5dce4914dad0c40c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "heaps.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "98fa26ce043ff4f9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Algorithms and data structures/binary trees.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -81,6 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "heaps.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "heaps.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +149,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "heaps.md"
+              }
             }
           }
         ]
@@ -138,36 +171,38 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b5828da340d6d0b9",
+  "active": "5dce4914dad0c40c",
   "lastOpenFiles": [
-    "Algorithms and data structures/Photos/Pasted image 20240129124207.png",
-    "Algorithms and data structures/Photos/Pasted image 20240129124103.png",
-    "Algorithms and data structures/Photos",
+    "Algorithms and data structures/binary trees.md",
+    "heaps.md",
+    "Algorithms and data structures/01 Types of lists.md",
+    "Algorithms and data structures/stacks.md",
+    "queues.md",
+    "01 types of$20lists.md",
+    "Algorithms and data structures/Dynamic programming.md",
+    "Welcome.md",
     "Algorithms and data structures/weighted graph.md",
     "Algorithms and data structures/Vertex cut.md",
     "Algorithms and data structures/Union-find Data Structure.md",
     "Algorithms and data structures/trees.md",
-    "Algorithms and data structures/stacks.md",
     "Algorithms and data structures/spanning trees.md",
-    "Algorithms and data structures/pointer.md",
     "Algorithms and data structures/linked lists.md",
+    "Algorithms and data structures/pointer.md",
     "Algorithms and data structures/Greedy algorithms.md",
     "Algorithms and data structures/graphs.md",
-    "Algorithms and data structures/Dynamic programming.md",
     "Algorithms and data structures/depth first search.md",
     "Algorithms and data structures/breadth first search.md",
     "Algorithms and data structures/binary search trees.md",
-    "Algorithms and data structures/Big-oh O(n).md",
+    "Algorithms and data structures/asymptotic notation.md",
     "Algorithms and data structures/arrays.md",
     "Algorithms and data structures/226 intro.md",
-    "Algorithms and data structures/01 Types of lists.md",
+    "Algorithms and data structures/Photos/Pasted image 20240129124207.png",
+    "Algorithms and data structures/Photos/Pasted image 20240129124103.png",
+    "Algorithms and data structures/Photos",
     "Algorithms and data structures",
     "Technical writing/Writing Strong Paragraphs.md",
     "Technical writing/Technical Writing Intro.md",
     "Technical writing/Project proposal memo.md",
-    "Technical writing/ONC project Q&A.md",
-    "Technical writing/IEEE.md",
-    "Technical writing/Feedback on student presentations.md",
     "Technical writing",
     "Statistics/Images/Pasted image 20240117105211.png",
     "Statistics/Images/Pasted image 20240117104746.png",
@@ -177,7 +212,6 @@
     "Statistics/Images/Pasted image 20240116104039.png",
     "Statistics/Images/Pasted image 20240116104518.png",
     "Statistics/Images",
-    "Statistics/Variance.md",
     "Statistics"
   ]
 }
