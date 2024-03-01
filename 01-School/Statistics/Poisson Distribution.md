@@ -87,6 +87,7 @@ if $k=4, P = 0.8153$
 if $k=5, P=0.9161$
 so $k=5$
 
+### Approximation
 
 Poisson approximation to [[Binomial Distribution]]:
 if X is a binomial rand. variable where:

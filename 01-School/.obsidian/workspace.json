@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "aa0f1580a06b40c5",
+        "id": "fa0f8a3daf7b4d9b",
         "type": "tabs",
         "children": [
           {
-            "id": "b3ace204fbba9b03",
+            "id": "f5f4d7b3a470b997",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Algorithms and data structures/queues.md",
+                "file": "Statistics/Jointly Distributed Random Variables.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "byModifiedTime"
               }
             }
           },
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Algorithms and data structures/queues.md",
+                "file": "Statistics/Jointly Distributed Random Variables.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Algorithms and data structures/queues.md",
+                "file": "Statistics/Jointly Distributed Random Variables.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Algorithms and data structures/queues.md"
+                "file": "Statistics/Jointly Distributed Random Variables.md"
               }
             }
           }
@@ -146,46 +146,47 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "d12ebb24d7b68e15",
+  "active": "f5f4d7b3a470b997",
   "lastOpenFiles": [
+    "Statistics/Variance.md",
+    "Statistics/Jointly Distributed Random Variables.md",
+    "Statistics/Images/Pasted image 20240228105044.png",
+    "Statistics/Images/Pasted image 20240228110834.png",
+    "CLASSES PLAN.md",
+    "Statistics/Normal Distribution.md",
+    "Statistics/Gamma Distribution.md",
+    "Statistics/Poisson Distribution.md",
+    "Statistics/Expected value.md",
+    "Statistics/Images/Pasted image 20240228104653.png",
+    "Statistics/Images/Pasted image 20240228103325.png",
+    "Technical writing/Technical Writing Intro.md",
+    "Algorithms and data structures/breadth first search.md",
+    "Algorithms and data structures/trees.md",
+    "Algorithms and data structures/queues.md",
     "Algorithms and data structures/priority queues.md",
     "Algorithms and data structures/heaps.md",
     "Algorithms and data structures/01 Types of lists.md",
     "Algorithms and data structures/binary trees.md",
     "Algorithms and data structures/stacks.md",
-    "Algorithms and data structures/queues.md",
     "01 types of$20lists.md",
     "Algorithms and data structures/Dynamic programming.md",
     "Welcome.md",
     "Algorithms and data structures/weighted graph.md",
     "Algorithms and data structures/Vertex cut.md",
     "Algorithms and data structures/Union-find Data Structure.md",
-    "Algorithms and data structures/trees.md",
     "Algorithms and data structures/spanning trees.md",
     "Algorithms and data structures/linked lists.md",
     "Algorithms and data structures/pointer.md",
     "Algorithms and data structures/Greedy algorithms.md",
-    "Algorithms and data structures/graphs.md",
-    "Algorithms and data structures/depth first search.md",
-    "Algorithms and data structures/breadth first search.md",
-    "Algorithms and data structures/binary search trees.md",
-    "Algorithms and data structures/asymptotic notation.md",
-    "Algorithms and data structures/arrays.md",
-    "Algorithms and data structures/226 intro.md",
     "Algorithms and data structures/Photos/Pasted image 20240129124207.png",
     "Algorithms and data structures/Photos/Pasted image 20240129124103.png",
     "Algorithms and data structures/Photos",
     "Algorithms and data structures",
-    "Technical writing/Writing Strong Paragraphs.md",
-    "Technical writing/Technical Writing Intro.md",
     "Technical writing",
     "Statistics/Images/Pasted image 20240117105211.png",
     "Statistics/Images/Pasted image 20240117104746.png",
     "Statistics/Images/Pasted image 20240117104525.png",
     "Statistics/Images/Pasted image 20240117103903.png",
-    "Statistics/Images/Pasted image 20240116104711.png",
-    "Statistics/Images/Pasted image 20240116104039.png",
-    "Statistics/Images/Pasted image 20240116104518.png",
     "Statistics/Images",
     "Statistics"
   ]
