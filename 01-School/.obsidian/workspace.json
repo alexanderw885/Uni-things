@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "fa0f8a3daf7b4d9b",
+        "id": "212c38a3e39a3149",
         "type": "tabs",
         "children": [
           {
-            "id": "f5f4d7b3a470b997",
+            "id": "5a52d5c3c032fe5a",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Statistics/Jointly Distributed Random Variables.md",
+                "file": "CLASSES PLAN.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "conditional",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Statistics/Jointly Distributed Random Variables.md",
+                "file": "CLASSES PLAN.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Statistics/Jointly Distributed Random Variables.md",
+                "file": "CLASSES PLAN.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Statistics/Jointly Distributed Random Variables.md"
+                "file": "CLASSES PLAN.md"
               }
             }
           }
@@ -146,38 +146,38 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f5f4d7b3a470b997",
+  "active": "5a52d5c3c032fe5a",
   "lastOpenFiles": [
-    "Statistics/Variance.md",
+    "Statistics/Estimating Proportions.md",
+    "Statistics/t-Distribution.md",
+    "Statistics/Statistical Inference.md",
+    "CLASSES PLAN.md",
+    "Statistics/Expected value.md",
+    "Statistics/Binomial Distribution.md",
+    "Statistics/Poisson Distribution.md",
     "Statistics/Jointly Distributed Random Variables.md",
+    "Statistics/Gamma Distribution.md",
+    "Statistics/Normal Distribution.md",
+    "Statistics/Probability - Conditional.md",
+    "Statistics/Central Limit Theorem.md",
+    "Statistics/Continuous Random Variables.md",
+    "Statistics/Sampling Distributions.md",
+    "Technical writing/Feedback on student presentations.md",
+    "Statistics/Mean, Median, Mode.md",
+    "Technical writing/Project proposal memo.md",
+    "Technical writing/Writing Strong Paragraphs.md",
+    "Technical writing/Technical Writing Intro.md",
+    "Statistics/Variance.md",
     "Statistics/Images/Pasted image 20240228105044.png",
     "Statistics/Images/Pasted image 20240228110834.png",
-    "CLASSES PLAN.md",
-    "Statistics/Normal Distribution.md",
-    "Statistics/Gamma Distribution.md",
-    "Statistics/Poisson Distribution.md",
-    "Statistics/Expected value.md",
     "Statistics/Images/Pasted image 20240228104653.png",
     "Statistics/Images/Pasted image 20240228103325.png",
-    "Technical writing/Technical Writing Intro.md",
     "Algorithms and data structures/breadth first search.md",
     "Algorithms and data structures/trees.md",
     "Algorithms and data structures/queues.md",
     "Algorithms and data structures/priority queues.md",
     "Algorithms and data structures/heaps.md",
     "Algorithms and data structures/01 Types of lists.md",
-    "Algorithms and data structures/binary trees.md",
-    "Algorithms and data structures/stacks.md",
-    "01 types of$20lists.md",
-    "Algorithms and data structures/Dynamic programming.md",
-    "Welcome.md",
-    "Algorithms and data structures/weighted graph.md",
-    "Algorithms and data structures/Vertex cut.md",
-    "Algorithms and data structures/Union-find Data Structure.md",
-    "Algorithms and data structures/spanning trees.md",
-    "Algorithms and data structures/linked lists.md",
-    "Algorithms and data structures/pointer.md",
-    "Algorithms and data structures/Greedy algorithms.md",
     "Algorithms and data structures/Photos/Pasted image 20240129124207.png",
     "Algorithms and data structures/Photos/Pasted image 20240129124103.png",
     "Algorithms and data structures/Photos",
