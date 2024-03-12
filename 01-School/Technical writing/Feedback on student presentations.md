@@ -68,7 +68,32 @@ this was a very good presentation
 
 
 
-# How to use team management software
-## AJ Gray, Isharpatap Kainth
-1:36
 
+# How to manage team conflict
+## Carter, Brendan
+1:48
+clear, concise slides
+I like the question slides in the middle
+maybe slides could have a little more information on them? with the presenters elaborating it's a good presentation, but the slides on their own don't say very much. not much more elaboration needed, but some would be good.
+
+# Collaborative writing
+## Marko, Prabhnoor
+1:35
+could talk a little bit louder
+just reading off slides
+could benefit from simplifying slides a bit, and just elaborating in the presentation by speaking
+at least for intro slides
+I do like benefits of collaborative writing slide, very nice
+has good points, well explained
+I like giving examples of programs to use, good thing to immediately put into practice
+I like the visual design overall, but it needs less full paragraphs
+maybe try breaking some slides up into a few shorter, more focused slide
+goods length
+
+# How to find reputable sources
+## Minh, Jagjeevan
+1:39
+good detail on slides
+I like how more info-heavy slides are followed by quick overviews in first-hand sources
+going through the example with that class was good
+		

@@ -11,7 +11,7 @@ CSC370 database systems **in**
 ### WANT
 **MUS 116 music appreciation**
 **SENG 310 human computer interaction**
-~~STAT 254 probability statistics for engineers~~
+~~STAT 254 probability statistics for engineers~~ (Can't take)
 MATH 222 discrete and combinatorial math
 **CSC 305 intro to computer graphics**
 CSC355/ECE355
