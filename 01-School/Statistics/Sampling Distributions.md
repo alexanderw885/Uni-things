@@ -25,10 +25,10 @@ ___
 
 **Any linear combination of independent normal random variables is normally distributed**
 $X_i\sim{}N(\mu_i,\sigma_i)$, $i=1,...,n$
-$$\sum_{i=1}^na_iX_i\sim{}N(\sum{}a_i\mu_i,\sum{}a_i\sigma_i$$
+$$\sum_{i=1}^na_iX_i\sim{}N(\sum{}a_i\mu_i,\sum{}a_i\sigma_i)$$
 if T is sum of $X_1,X_2,...,X_n$
-$T\sim{}N(\mu_1+\mu_2+...+\mu_3, \sqrt{\sigma_1^2+\sigma_2^2+...+\sigma_3^2})$ 
-***ERROR ERROR ERROR THIS WAS NOT CORRECT, IT MUST BE FIXED AT ALL COSTS TODO TODO TODO***
+$T\sim{}N(\mu_1+\mu_2+...+\mu_n, \sqrt{V(X_1)+V(X_2)+...+V(X_3)})$ 
+***ERROR ERROR ERROR MAYBE BUT MAYBE FIXED***
 
 
 Mass of Male flamingo is normally distributed.
@@ -40,7 +40,7 @@ suppose a male and female are randomly selected, what are odds of total mass exc
 due to above statement, we know this has lin. distribution as well. we need to find new distribution
 
 Let $T$ be total mass of the flamingoes.
-$X_1$=mass of male flamingo $X_1\sim{}N(4.5, 0.3$
+$X_1$=mass of male flamingo $X_1\sim{}N(4.5, 0.3)$
 $X_2$=mass of female flamingo $X_2\sim{}N(2,0.1)$
 $T=(X_1+X_2)$
 $T\sim{}N(4.5+2,\sqrt{V(X_1)+V(X_2)})$
