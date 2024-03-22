@@ -71,7 +71,7 @@ need s, $\bar{x}$, $t_{n-1}$
 $\bar{x}$ on calculator, = 13.9714
 s on calculator = 3.6550
 n=7
-find $t_6,0.025$ on table = 2.447
+find $t_{6,0.025}$ on table = 2.447
 $t\frac{s}{\sqrt{n}}$
 $\frac{(2.447)(3.6550)}{\sqrt{7}}=3.3804$
 
