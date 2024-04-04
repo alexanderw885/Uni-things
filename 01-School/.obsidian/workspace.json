@@ -4,18 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "212c38a3e39a3149",
+        "id": "a60a4d17a0b7245e",
         "type": "tabs",
         "children": [
           {
-            "id": "5a52d5c3c032fe5a",
+            "id": "902c0d261c772bf2",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "CLASSES PLAN.md",
-                "mode": "source",
-                "source": false
+                "file": "Pasted image 20240315111251.png"
               }
             }
           }
@@ -48,7 +46,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "conditional",
+                "query": "assum",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -85,7 +83,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CLASSES PLAN.md",
+                "file": "Pasted image 20240315111251.png",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +100,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CLASSES PLAN.md",
+                "file": "Pasted image 20240315111251.png",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +123,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CLASSES PLAN.md"
+                "file": "Pasted image 20240315111251.png"
               }
             }
           }
@@ -146,11 +144,25 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5a52d5c3c032fe5a",
+  "active": "902c0d261c772bf2",
   "lastOpenFiles": [
-    "Statistics/Estimating Proportions.md",
+    "Pasted image 20240326105148.png",
+    "Pasted image 20240327103642.png",
     "Statistics/t-Distribution.md",
+    "Statistics/Comparing two population proportions.md",
+    "a",
+    "Statistics/Comparing two population means.md",
+    "Statistics/P-value Approach.md",
+    "Pasted image 20240326104848.png",
+    "Statistics/Hypothesis Testing.md",
+    "Statistics/Sampling Distributions.md",
     "Statistics/Statistical Inference.md",
+    "Statistics/Central Limit Theorem.md",
+    "Statistics/Estimating Proportions.md",
+    "Pasted image 20240315111251.png",
+    "Statistics/Confidence Interval Approach.md",
+    "Technical writing/Feedback on student presentations.md",
+    "Technical writing/Revision assignment info.md",
     "CLASSES PLAN.md",
     "Statistics/Expected value.md",
     "Statistics/Binomial Distribution.md",
@@ -159,34 +171,20 @@
     "Statistics/Gamma Distribution.md",
     "Statistics/Normal Distribution.md",
     "Statistics/Probability - Conditional.md",
-    "Statistics/Central Limit Theorem.md",
     "Statistics/Continuous Random Variables.md",
-    "Statistics/Sampling Distributions.md",
-    "Technical writing/Feedback on student presentations.md",
     "Statistics/Mean, Median, Mode.md",
     "Technical writing/Project proposal memo.md",
     "Technical writing/Writing Strong Paragraphs.md",
     "Technical writing/Technical Writing Intro.md",
-    "Statistics/Variance.md",
     "Statistics/Images/Pasted image 20240228105044.png",
     "Statistics/Images/Pasted image 20240228110834.png",
     "Statistics/Images/Pasted image 20240228104653.png",
     "Statistics/Images/Pasted image 20240228103325.png",
-    "Algorithms and data structures/breadth first search.md",
-    "Algorithms and data structures/trees.md",
-    "Algorithms and data structures/queues.md",
-    "Algorithms and data structures/priority queues.md",
-    "Algorithms and data structures/heaps.md",
-    "Algorithms and data structures/01 Types of lists.md",
     "Algorithms and data structures/Photos/Pasted image 20240129124207.png",
     "Algorithms and data structures/Photos/Pasted image 20240129124103.png",
     "Algorithms and data structures/Photos",
     "Algorithms and data structures",
     "Technical writing",
-    "Statistics/Images/Pasted image 20240117105211.png",
-    "Statistics/Images/Pasted image 20240117104746.png",
-    "Statistics/Images/Pasted image 20240117104525.png",
-    "Statistics/Images/Pasted image 20240117103903.png",
     "Statistics/Images",
     "Statistics"
   ]

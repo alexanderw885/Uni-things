@@ -96,4 +96,4 @@ goods length
 good detail on slides
 I like how more info-heavy slides are followed by quick overviews in first-hand sources
 going through the example with that class was good
-		
+
