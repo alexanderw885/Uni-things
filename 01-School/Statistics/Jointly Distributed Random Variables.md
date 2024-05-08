@@ -51,7 +51,7 @@ $$\sum_x\sum_y(X^2-Y)f(x,y)$$
 ### Covariance
 Cov(X,Y):
 $$Cov(X,Y)=\sum_x\sum_y(x-\mu_x)(y-\mu_y)$$
-an easier waw to calculate is:
+an easier way to calculate is:
 $$Cov(X,Y)=E(X,Y)-\mu_x\mu_y$$
 Note: unlike [[Variance]], Covariance can be negative
 
