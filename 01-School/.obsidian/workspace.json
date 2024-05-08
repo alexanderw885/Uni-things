@@ -11,9 +11,11 @@
             "id": "902c0d261c772bf2",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "Pasted image 20240315111251.png"
+                "file": "Statistics/Comparing two population means.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
@@ -36,7 +38,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "byModifiedTime"
+                "sortOrder": "byCreatedTime"
               }
             }
           },
@@ -46,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "assum",
+                "query": "1-e^{",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -83,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Pasted image 20240315111251.png",
+                "file": "Statistics/Comparing two population means.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Pasted image 20240315111251.png",
+                "file": "Statistics/Comparing two population means.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -123,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Pasted image 20240315111251.png"
+                "file": "Statistics/Comparing two population means.md"
               }
             }
           }
@@ -146,36 +148,37 @@
   },
   "active": "902c0d261c772bf2",
   "lastOpenFiles": [
+    "Statistics/Correlation Coefficient.md",
+    "Statistics/Jointly Distributed Random Variables.md",
+    "Statistics/Gamma Distribution.md",
+    "Statistics/Comparing two population means.md",
+    "Statistics/Comparing two population proportions.md",
+    "Statistics/Variance.md",
+    "Statistics/Central Limit Theorem.md",
+    "Statistics/Sampling Distributions.md",
+    "Statistics/Estimating Proportions.md",
+    "Statistics/Poisson Distribution.md",
+    "Statistics/Normal Distribution.md",
+    "Statistics/Probability.md",
+    "Statistics/Probability-independent events + Mutual exclusive.md",
+    "Statistics/Probability - Conditional.md",
+    "Statistics/Statistics terms.md",
+    "Statistics/Descriptive statistics.md",
+    "Pasted image 20240315111251.png",
     "Pasted image 20240326105148.png",
     "Pasted image 20240327103642.png",
     "Statistics/t-Distribution.md",
-    "Statistics/Comparing two population proportions.md",
     "a",
-    "Statistics/Comparing two population means.md",
     "Statistics/P-value Approach.md",
     "Pasted image 20240326104848.png",
     "Statistics/Hypothesis Testing.md",
-    "Statistics/Sampling Distributions.md",
     "Statistics/Statistical Inference.md",
-    "Statistics/Central Limit Theorem.md",
-    "Statistics/Estimating Proportions.md",
-    "Pasted image 20240315111251.png",
     "Statistics/Confidence Interval Approach.md",
     "Technical writing/Feedback on student presentations.md",
     "Technical writing/Revision assignment info.md",
     "CLASSES PLAN.md",
     "Statistics/Expected value.md",
     "Statistics/Binomial Distribution.md",
-    "Statistics/Poisson Distribution.md",
-    "Statistics/Jointly Distributed Random Variables.md",
-    "Statistics/Gamma Distribution.md",
-    "Statistics/Normal Distribution.md",
-    "Statistics/Probability - Conditional.md",
-    "Statistics/Continuous Random Variables.md",
-    "Statistics/Mean, Median, Mode.md",
-    "Technical writing/Project proposal memo.md",
-    "Technical writing/Writing Strong Paragraphs.md",
-    "Technical writing/Technical Writing Intro.md",
     "Statistics/Images/Pasted image 20240228105044.png",
     "Statistics/Images/Pasted image 20240228110834.png",
     "Statistics/Images/Pasted image 20240228104653.png",
