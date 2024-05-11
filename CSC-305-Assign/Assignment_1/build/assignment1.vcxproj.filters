@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Windows\OneDrive\MyDocs\GitHub\Uni-things\CSC-305-Assign\Assignment_1\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Windows\OneDrive\MyDocs\GitHub\Uni-things\CSC-305-Assign\Assignment_1\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ADA6AD35-1A0F-3246-A786-DA4B24946E19}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
