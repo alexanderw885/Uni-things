@@ -6,3 +6,5 @@ Also has LaTeX for equations
 
 
 Along with notes, contains assignments and resources used for classes, labelled under appropriate class files
+
+ext folder is used by CSC-305 assignments
