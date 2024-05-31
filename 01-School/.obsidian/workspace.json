@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Statistics/Comparing two population means.md",
+                "file": "CSC 305 - Graphics/Ray Tracing.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Statistics/Comparing two population means.md",
+                "file": "CSC 305 - Graphics/Ray Tracing.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Statistics/Comparing two population means.md",
+                "file": "CSC 305 - Graphics/Ray Tracing.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Statistics/Comparing two population means.md"
+                "file": "CSC 305 - Graphics/Ray Tracing.md"
               }
             }
           }
@@ -148,47 +148,50 @@
   },
   "active": "902c0d261c772bf2",
   "lastOpenFiles": [
-    "Statistics/Correlation Coefficient.md",
-    "Statistics/Jointly Distributed Random Variables.md",
-    "Statistics/Gamma Distribution.md",
-    "Statistics/Comparing two population means.md",
-    "Statistics/Comparing two population proportions.md",
-    "Statistics/Variance.md",
-    "Statistics/Central Limit Theorem.md",
-    "Statistics/Sampling Distributions.md",
-    "Statistics/Estimating Proportions.md",
-    "Statistics/Poisson Distribution.md",
-    "Statistics/Normal Distribution.md",
-    "Statistics/Probability.md",
-    "Statistics/Probability-independent events + Mutual exclusive.md",
-    "Statistics/Probability - Conditional.md",
-    "Statistics/Statistics terms.md",
-    "Statistics/Descriptive statistics.md",
-    "Pasted image 20240315111251.png",
-    "Pasted image 20240326105148.png",
-    "Pasted image 20240327103642.png",
-    "Statistics/t-Distribution.md",
-    "a",
-    "Statistics/P-value Approach.md",
-    "Pasted image 20240326104848.png",
-    "Statistics/Hypothesis Testing.md",
-    "Statistics/Statistical Inference.md",
-    "Statistics/Confidence Interval Approach.md",
-    "Technical writing/Feedback on student presentations.md",
-    "Technical writing/Revision assignment info.md",
+    "CSC 305 - Graphics/Images.md",
+    "CSC 305 - Graphics/Procedural Synthesis.md",
+    "CSC 305 - Graphics/C++  Intro.md",
+    "CSC 305 - Graphics/Ray Tracing.md",
     "CLASSES PLAN.md",
-    "Statistics/Expected value.md",
-    "Statistics/Binomial Distribution.md",
-    "Statistics/Images/Pasted image 20240228105044.png",
-    "Statistics/Images/Pasted image 20240228110834.png",
-    "Statistics/Images/Pasted image 20240228104653.png",
-    "Statistics/Images/Pasted image 20240228103325.png",
-    "Algorithms and data structures/Photos/Pasted image 20240129124207.png",
-    "Algorithms and data structures/Photos/Pasted image 20240129124103.png",
+    "STAT 260 - Statistics/Images/Pasted image 20240315111251.png",
+    "STAT 260 - Statistics/Images/Pasted image 20240326104848.png",
+    "STAT 260 - Statistics/Images/Pasted image 20240326105148.png",
+    "STAT 260 - Statistics/Images/Pasted image 20240327103642.png",
+    "CSC 370 - Databases/Images/Pasted image 20240515130147.png",
+    "CSC 370 - Databases/Images/Pasted image 20240515131618.png",
+    "CSC 360 - Operating Systems/Images/Pasted image 20240515141511.png",
+    "CSC 360 - Operating Systems/Images/Pasted image 20240515140559.png",
+    "CSC 370 - Databases/Images/Pasted image 20240517124724.png",
+    "CSC 370 - Databases/Images/Pasted image 20240517130043.png",
+    "CSC 370 - Databases/Images",
+    "CSC 360 - Operating Systems/Images",
+    "CSC 305 - Graphics/Images",
+    "STAT 260 - Statistics/Comparing two population means.md",
+    "STAT 260 - Statistics/Correlation Coefficient.md",
+    "STAT 260 - Statistics/Jointly Distributed Random Variables.md",
+    "STAT 260 - Statistics/Gamma Distribution.md",
+    "STAT 260 - Statistics/Comparing two population proportions.md",
+    "STAT 260 - Statistics/Variance.md",
+    "STAT 260 - Statistics/Central Limit Theorem.md",
+    "STAT 260 - Statistics/Sampling Distributions.md",
+    "STAT 260 - Statistics/Estimating Proportions.md",
+    "STAT 260 - Statistics/Poisson Distribution.md",
+    "STAT 260 - Statistics/Normal Distribution.md",
+    "STAT 260 - Statistics/Probability.md",
+    "STAT 260 - Statistics/Probability-independent events + Mutual exclusive.md",
+    "STAT 260 - Statistics/Probability - Conditional.md",
+    "STAT 260 - Statistics/Statistics terms.md",
+    "STAT 260 - Statistics/Descriptive statistics.md",
+    "STAT 260 - Statistics/t-Distribution.md",
+    "a",
+    "STAT 260 - Statistics/P-value Approach.md",
+    "STAT 260 - Statistics/Hypothesis Testing.md",
+    "STAT 260 - Statistics/Statistical Inference.md",
+    "STAT 260 - Statistics/Confidence Interval Approach.md",
     "Algorithms and data structures/Photos",
     "Algorithms and data structures",
     "Technical writing",
-    "Statistics/Images",
-    "Statistics"
+    "STAT 260 - Statistics/Images",
+    "STAT 260 - Statistics"
   ]
 }
