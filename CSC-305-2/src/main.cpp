@@ -5,6 +5,7 @@
 
 // Utilities for the Assignment
 #include "utils.h"
+#include <Eigen/Dense>
 
 // Image writing library
 #define STB_IMAGE_WRITE_IMPLEMENTATION // Do not include this line twice in your project!
@@ -197,6 +198,7 @@ void raytrace_shading()
 {
     std::cout << "Simple ray tracer, one sphere with different shading" << std::endl;
 
+    //TODO: make separate channels for RGB
     const std::string filename("shading.png");
     MatrixXd C = MatrixXd::Zero(800, 800); // Store the color
     MatrixXd A = MatrixXd::Zero(800, 800); // Store the alpha mask

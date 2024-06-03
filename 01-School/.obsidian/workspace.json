@@ -13,13 +13,38 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CSC 305 - Graphics/Ray Tracing.md",
+                "file": "CSC 370 - Databases/More SQL Commands.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "9f604e132892e086",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CSC 305 - Graphics/Procedural Synthesis.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "1e5f52eeefcd85b6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CSC 370 - Databases/Grouping and Aggregation.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -85,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CSC 305 - Graphics/Ray Tracing.md",
+                "file": "CSC 305 - Graphics/Procedural Synthesis.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CSC 305 - Graphics/Ray Tracing.md",
+                "file": "CSC 305 - Graphics/Procedural Synthesis.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CSC 305 - Graphics/Ray Tracing.md"
+                "file": "CSC 305 - Graphics/Procedural Synthesis.md"
               }
             }
           }
@@ -146,12 +171,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "902c0d261c772bf2",
+  "active": "9f604e132892e086",
   "lastOpenFiles": [
-    "CSC 305 - Graphics/Images.md",
+    "CSC 305 - Graphics/A1 README.md",
     "CSC 305 - Graphics/Procedural Synthesis.md",
-    "CSC 305 - Graphics/C++  Intro.md",
+    "CSC 370 - Databases/More SQL Commands.md",
+    "CSC 370 - Databases/SQL Commands.md",
+    "CSC 370 - Databases/Referential integrity constraints.md",
+    "CSC 370 - Databases/Retrieving Data.md",
+    "CSC 370 - Databases/Functional Dependancies and Keys.md",
+    "CSC 370 - Databases/Multiplicity.md",
+    "CSC 360 - Operating Systems/Exam 1.md",
+    "CSC 370 - Databases/Grouping and Aggregation.md",
     "CSC 305 - Graphics/Ray Tracing.md",
+    "CSC 305 - Graphics/Images.md",
+    "CSC 305 - Graphics/C++  Intro.md",
     "CLASSES PLAN.md",
     "STAT 260 - Statistics/Images/Pasted image 20240315111251.png",
     "STAT 260 - Statistics/Images/Pasted image 20240326104848.png",
@@ -178,16 +212,7 @@
     "STAT 260 - Statistics/Poisson Distribution.md",
     "STAT 260 - Statistics/Normal Distribution.md",
     "STAT 260 - Statistics/Probability.md",
-    "STAT 260 - Statistics/Probability-independent events + Mutual exclusive.md",
-    "STAT 260 - Statistics/Probability - Conditional.md",
-    "STAT 260 - Statistics/Statistics terms.md",
-    "STAT 260 - Statistics/Descriptive statistics.md",
-    "STAT 260 - Statistics/t-Distribution.md",
     "a",
-    "STAT 260 - Statistics/P-value Approach.md",
-    "STAT 260 - Statistics/Hypothesis Testing.md",
-    "STAT 260 - Statistics/Statistical Inference.md",
-    "STAT 260 - Statistics/Confidence Interval Approach.md",
     "Algorithms and data structures/Photos",
     "Algorithms and data structures",
     "Technical writing",
