@@ -58,3 +58,11 @@ ADD FOREIGN KEY(`UserId`)
 REFERENCES `Users`(`Id`);
 ON DELETE (CASCADE/SETNULL)
 ```
+
+#### Where/ having
+where applies to each tuple
+having applies to whole table
+`WHERE Id LIKE \%Canada%'`
+versus
+`HAVING COUNT(*) =5`
+
