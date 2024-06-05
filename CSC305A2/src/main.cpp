@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 
 // Utilities for the Assignment
 #include "utils.h"
@@ -18,8 +19,8 @@ void raytrace_sphere()
     std::cout << "Simple ray tracer, one sphere with orthographic projection" << std::endl;
 
     const std::string filename("sphere_orthographic.png");
-    MatrixXd C = MatrixXd::Zero(800, 800); // Store the color
-    MatrixXd A = MatrixXd::Zero(800, 800); // Store the alpha mask
+    MatrixXd C = MatrixXd::Zero(80, 80); // Store the color
+    MatrixXd A = MatrixXd::Zero(80, 80); // Store the alpha mask
 
     const Vector3d camera_origin(0, 0, 3);
     const Vector3d camera_view_direction(0, 0, -1);
@@ -42,6 +43,7 @@ void raytrace_sphere()
             // Prepare the ray
             const Vector3d ray_origin = pixel_center;
             const Vector3d ray_direction = camera_view_direction;
+
 
             // Intersect with the sphere
             // NOTE: this is a special case of a sphere centered in the origin and for orthographic rays aligned with the z axis
@@ -109,6 +111,14 @@ void raytrace_parallelogram()
             const Vector3d ray_direction = camera_view_direction;
 
             // TODO: Check if the ray intersects with the parallelogram
+            Vector3d side1 = pgram_u - pgram_origin;
+            Vector3d side2 = pgram_v - pgram_origin;
+            Vector3d toOrigin = ray_origin - pgram_origin;
+
+            // vec3 = vec1.cross(vec2);
+            
+
+
             if (true)
             {
                 // TODO: The ray hit the parallelogram, compute the exact intersection
@@ -165,8 +175,8 @@ void raytrace_perspective()
             const Vector3d pixel_center = image_origin + double(i) * x_displacement + double(j) * y_displacement;
 
             // TODO: Prepare the ray (origin point and direction)
-            const Vector3d ray_origin = pixel_center;
-            const Vector3d ray_direction = camera_view_direction;
+            const Vector3d ray_origin = camera_origin;
+            const Vector3d ray_direction = pixel_center - camera_origin;
 
             // TODO: Check if the ray intersects with the parallelogram
             if (true)
@@ -198,8 +208,11 @@ void raytrace_shading()
     std::cout << "Simple ray tracer, one sphere with different shading" << std::endl;
 
     const std::string filename("shading.png");
-    MatrixXd C = MatrixXd::Zero(800, 800); // Store the color
-    MatrixXd A = MatrixXd::Zero(800, 800); // Store the alpha mask
+    const int size = 800; // For easy changing
+    MatrixXd R = MatrixXd::Zero(size, size); // Store the color
+    MatrixXd G = MatrixXd::Zero(size, size); // Store the color
+    MatrixXd B = MatrixXd::Zero(size, size); // Store the color
+    MatrixXd A = MatrixXd::Zero(size, size); // Store the alpha mask
 
     const Vector3d camera_origin(0, 0, 3);
     const Vector3d camera_view_direction(0, 0, -1);
@@ -222,35 +235,60 @@ void raytrace_shading()
     const Vector3d light_position(-1, 1, 1);
     double ambient = 0.1;
 
-    for (unsigned i = 0; i < C.cols(); ++i)
+    for (unsigned i = 0; i < A.cols(); ++i)
     {
-        for (unsigned j = 0; j < C.rows(); ++j)
+        for (unsigned j = 0; j < A.rows(); ++j)
         {
             const Vector3d pixel_center = image_origin + double(i) * x_displacement + double(j) * y_displacement;
 
             // TODO: Prepare the ray (origin point and direction)
-            const Vector3d ray_origin = pixel_center;
-            const Vector3d ray_direction = camera_view_direction;
+            const Vector3d ray_origin = camera_origin;
+            const Vector3d ray_direction = pixel_center - camera_origin;
 
             // Intersect with the sphere
-            // TODO: implement the generic ray sphere intersection
-            if (true)
+
+            double a = ray_direction.dot(ray_direction);
+            double b = 2 * (ray_direction.dot(ray_origin-sphere_center));
+            double c = (ray_origin - sphere_center).dot(ray_origin - sphere_center) - pow(sphere_radius, 2);
+            
+            //use to solve quadratic equation
+            double root = b * b - (4 * a * c);
+
+            if (root >= 0)
             {
+                // Making sure t is smallest value greater than 0
+                root = sqrt(root);
+                double t = (-b - root) / (2 * a);
+                if (t < 0)
+                {
+                    t = (-b + root) / (2 * a);
+                    if (t < 0)
+                        continue;
+                }
+
+
                 // TODO: The ray hit the sphere, compute the exact intersection point
-                Vector3d ray_intersection(0, 0, 0);
-
+                Vector3d ray_intersection = ray_origin + (t * ray_direction);
+                
                 // TODO: Compute normal at the intersection point
-                Vector3d ray_normal = ray_intersection.normalized();
-
+                Vector3d ray_normal = ray_intersection - sphere_center;
+                
                 // TODO: Add shading parameter here
                 const double diffuse = (light_position - ray_intersection).normalized().dot(ray_normal);
                 const double specular = (light_position - ray_intersection).normalized().dot(ray_normal);
 
-                // Simple diffuse model
-                C(i, j) = ambient + diffuse + specular;
 
+                // Simple diffuse model
+                R(i, j) = ambient + (diffuse * diffuse_color[0]) + (specular * specular_color[0]);
+                G(i, j) = ambient + (diffuse * diffuse_color[1]) + (specular * specular_color[1]);
+                B(i, j) = ambient + (diffuse * diffuse_color[2]) + (specular * specular_color[2]);
+                
                 // Clamp to zero
-                C(i, j) = std::max(C(i, j), 0.);
+                
+                R(i, j) = std::max(R(i, j), 0.);
+                G(i, j) = std::max(G(i, j), 0.);
+                B(i, j) = std::max(B(i, j), 0.);
+
 
                 // Disable the alpha mask for this pixel
                 A(i, j) = 1;
@@ -259,14 +297,14 @@ void raytrace_shading()
     }
 
     // Save to png
-    write_matrix_to_png(C, C, C, A, filename);
+    write_matrix_to_png(R, G, B, A, filename);
 }
 
 int main()
 {
-    raytrace_sphere();
-    raytrace_parallelogram();
-    raytrace_perspective();
+    //raytrace_sphere();
+    //raytrace_parallelogram();
+    //raytrace_perspective();
     raytrace_shading();
 
     return 0;
