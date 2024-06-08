@@ -68,3 +68,10 @@ it's implied that the teacher teaches the class, so we don't need the `teaches` 
 ### Take home activity
 implement this in SQL ![[Pasted image 20240517132243.png]]
 done in database `class-ex`
+
+
+### Add key after creation
+```sql
+ALTER TABLE Tags
+ADD PRIMARY KEY (Id);
+```

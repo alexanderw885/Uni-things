@@ -18,6 +18,9 @@ it's very easy to share data between threads compared to IPC
 Faster to create and terminate
 Takes less resources than processes
 
+GOLBAL VARIABLES DECLARED OUT OF A FUNCTION ARE SHARED BETWEEN THREADS
+but that won't always work properly
+what if two threads call variable at the same time? data will get overwritten
 
 ### User vs Kernel threads
 ##### User
@@ -65,3 +68,40 @@ POSIX.1 specifies set of interfaces for threads
 
 question: how does Pthread manage user and kernel threads? Many-many, many-one,...?
 Documents in slide 7-14
+Answer: in linux, with Pthread,  it's one-one
+
+
+### Example: producer-consumer
+```c
+void *producer(void *fifo)
+{
+	// produce/put elements in fifo
+	
+}
+
+void *consumer(void *fifo)
+{
+	// consumes elements in fifo
+}
+
+int main()
+{
+	queue *fifo;
+	pthread_t pro;
+	pthread_t con;
+	fifo = queieInit();
+	if(fifo == NULL)
+	{
+		fprint(stderr, "main: Queue failed init.\n");
+		exit(1);
+	}
+	pthread_create
+		(&pro, NULL, producer, fifo);
+	pthread_create
+		(&con, NULL, consumer, fifo);
+	// MUST use join, or main thread
+	// will end too soon
+	pthread_join(pro, NULL);
+	pthread_join(con, NULL);
+}
+```
