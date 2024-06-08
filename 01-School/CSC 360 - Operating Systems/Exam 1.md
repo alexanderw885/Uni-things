@@ -19,11 +19,12 @@ Application program interface (API)
 #### Processes
 MOST IMPORTANT
 what is a process?
+- Program in execution
 - each executable could be executed multiple times
 - not source code
 - source code in storage, process is running executable
 process structure
-- stack, heap, data
+- stack, heap, data, text
 states
 - new->ready->running->waiting->...
 PCB
