@@ -56,3 +56,20 @@ There exists "Perceptually uniform colourmaps" to get around this.
 *or*, you could use carefully chosen colour schemes to manipulate data!
 
 # Implicit Modelling
+
+
+
+## Turning implicit into explicit
+can use marching squares/cubes
+- create grid
+- find if each vertex is inside-outside the shape
+- program result for each case
+- there's 16 cases, but thanks to symmetry there's only 4 unique cases
+![[Pasted image 20240610101138.png]]
+how do you decide where the boundary of inside-outside is?
+You can just choose the middle, but that's unlikely to be accurate. Instead, linear interpolation is more likely to be accurate. However, it's even more of a pain, just don't.
+
+it's a pain to implement, if you must do it then use triangles instead
+#### 3d
+can go up to 3d with marching squares, but then there's $2^8$ possible states, with is way too many. Just use a library. If you *really* need to, still just do it with triangles instead of cubes
+

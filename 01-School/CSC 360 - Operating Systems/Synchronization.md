@@ -75,3 +75,41 @@ while(true)
 	// non-critical section
 }
 ```
+
+# Semaphore
+
+```c
+#include <pthread.h>
+#include <semaphore.h>
+```
+work similarly to mutexes. With mutexes, they can only be unlocked by the thread that locked them. 
+Semaphores are only a value, and a signal. 
+
+only 2 functions
+```c
+wait(S): // call with P()
+	while S <= 0 
+		do nothing;
+	S--;
+
+Signal(S): // call with V()
+	S++;
+```
+
+Semaphore S - integer value
+can be binary, or counting
+binary semaphores are like mutexes, 0=locked, 1=unlocked
+counting semaphores can let a program run through the critical section multiple times in a row, until the value goes down to 0
+
+#### Binary semaphore example
+```c
+sem_t sem;
+
+do
+{
+	wait(sem);
+	// criticl section
+	signal(sem);
+	//non-critical section
+} while (1);
+```

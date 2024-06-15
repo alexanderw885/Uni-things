@@ -1,4 +1,4 @@
-given you have files in downloads
+INTO TABLE 'given you have files in downloads
 ```SQL
 create database `class-movielens`
 use class-movielens;

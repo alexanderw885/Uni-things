@@ -149,3 +149,174 @@ CASCADE;
 this is kept track if with a directed acyclic graph
 ![[Pasted image 20240607131100.png]]
 in this example, Janeway is the owner of the database, with each of her privileges being a "root note"
+
+# Database Views
+create views to control user access
+know effect of `INSERT, UPDATE, DELETE` queries on those views
+
+### Creating views
+what if we don't want the user 'schester' from seeing grades?
+Students(**v_number**, name, major);
+Enrollments(**course, v_number, semester**, grade)
+Course(**course_id**, name, instructor)
+
+```
+REVOKE SELECT
+ON Enrollments(grade)
+FROM schester
+CASCADE;
+```
+but what if we just want to stop him from seeing grades outside of CSC370? Then that method won't work, since he still needs to be able to see some grades 
+or what about only let him see grades for classes he teaches?
+This is what you use views for!
+
+### view as a query
+```sql
+CREATE VIEW viewname(column names) AS
+  SELECT <rest of query>;
+```
+
+**lets go back to the previous example:**
+what if we don't want the user 'schester' from seeing grades not from CSC370?
+
+Students(**v_number**, name, major);
+Enrollments(**course, v_number, semester**, grade)
+Course(**course_id**, name, instructor)
+```sql
+CREATE VIEW `DBStudents` AS
+  SELECT *
+  FROM `Enrollments`
+  WHERE `course` LIKE 'CSC370';
+
+GRANT SELECTON
+ON `DBStudents`
+TO `schester`;
+```
+
+all courses he teaches?
+
+```sql
+CREATE VIEW `DBStudents` AS
+  SELECT *
+  FROM `Enrollments`
+  JOIN `Course`
+  ON (`course`=`course_id`)
+  WHERE `instructor` = `schester`;
+
+GRANT SELECTON
+ON `DBStudents`
+TO `schester`;
+```
+
+### Selecting from Views
+what happens when we execute a query against a view instead of a table?
+```sql
+CREATE VIEW `DBStudents` AS
+  SELECT *
+  FROM `Enrollments`
+  WHERE `course` = 1234;
+
+SELECT * FROM `DBStudents`;
+```
+this is just like using the view as a subquery on the `ON` statement
+```sql
+SELECT *
+FROM
+(
+  SELECT *
+  FROM `Enrollments`
+  WHERE `course` = 1234;
+)
+AS `DBStudents`;
+```
+
+Views can be used exactly like any other regular table
+```sql
+SELECT *
+FROM `DBStudents`
+NATURAL JOIN `Students`;
+```
+
+what happens in this case?
+![[Pasted image 20240611130321.png]]
+note that now `DBStudents` does not have `grade`
+so in this case, we'll get an error message.
+to substitute in the subquery instead of a view:
+```sql
+SELECT *
+FROM
+(
+  SELECT `course`, `v_number`,
+    `semester` 
+  FROM `Enrollments`
+  WHERE `course`=1234
+)
+NATURAL JOIN `Students`
+WHERE `grade` = 7.0;
+```
+you can see here that grade is nowhere in this table
+### Dropping
+can drop view
+`DROP VIEW DBStudents`
+or whole table
+`DROP TABLE Enrollments`
+
+
+### Inserting into views
+Inserting into a view is the same as inserting into a table, since they always query the base table.
+```sql
+INSERT INTO `DBStudents`
+VALUES (...);
+```
+this inserts into the table `Enrollments`
+
+what if attributes outside of the view don't have default values?
+```sql
+CREATE VIEW `DBStudents` AS
+	SELECT `course , `student`
+	FROM `Enrollments`
+	WHERE `course` = 1234;
+
+INSERT INTO `DBStudents`
+VALUES ( ... );
+```
+since semester is an identifier, you cannot add into Enrollments without it
+Meaning you cannot add to the view in this case
+Note that if the user does not have insert permission on the base table, they cannot insert on the view.
+### Deleting into views
+what if we try to delete from a view?
+```sql
+DELETE FROM `DBStudents`
+WHERE `grade` > 9.0;
+```
+this is also executed against the base table. Note they can only delete from tuples they can see, and if they have permission on the base table
+
+### Materialized views
+instead of always referencing the table, this creates a new copy of the data
+
+this is faster to read than regular views since it doesn't reference the base table every time.
+can be approximated as:
+```sql
+CREATE TABLE `DBStudents` AS
+  SELECT *
+  FROM Enrollments
+  WHERE course = 1234;
+```
+however, now when Enrollments is updated, `DBStudents` is not. 
+Now, `DBStudents` is a snapshot of that moment in `Enrollments`
+
+
+### Example
+
+ensure Alice can only view `movieExecs` who are presidents
+```
+create view pres as
+  select *
+  from MovieExec
+  join Studio
+  on (MovieExec.certNo = Studio.presC#);
+
+Grant select
+on pres
+to alice
+```
