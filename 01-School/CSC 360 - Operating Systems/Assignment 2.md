@@ -45,3 +45,14 @@ signal convar
 unlock mutex
 deal with customer
 loop to start
+
+___
+# In class overview
+use thread, mutex, convar
+
+**You do not need to error check the format, assume that is correct**
+what errors to correct for:
+- negative numbers
+- invalid values
+If there is an error in the input, you can terminate the entire program
+

@@ -1,3 +1,4 @@
+/*
 // C++ include
 #include <iostream>
 #include <string>
@@ -41,8 +42,10 @@ void raytrace_sphere()
             const Vector3d pixel_center = image_origin + double(i) * x_displacement + double(j) * y_displacement;
 
             // Prepare the ray
-            const Vector3d ray_origin = pixel_center;
-            const Vector3d ray_direction = camera_view_direction;
+            //const Vector3d ray_origin = pixel_center;
+            //const Vector3d ray_direction = camera_view_direction;
+            const Vector3d ray_origin = camera_origin;
+            const Vector3d ray_direction = pixel_center - camera_origin;
 
 
             // Intersect with the sphere
@@ -89,7 +92,7 @@ Vector3d triIntersect(Vector3d ro, Vector3d rd, Vector3d v0, Vector3d v1, Vector
     Vector3d q = rov0.cross(rd);
     double d = 1 / rd.dot(n);
     double u = d * (-q).dot(v2v0);
-    double v = d *    q.dot(v1v0);
+    double v = d * q.dot(v1v0);
     double t = d * (-n).dot(rov0);
 
     return Vector3d(t, u, v);
@@ -135,14 +138,14 @@ void raytrace_parallelogram()
 
             Vector3d t_u_v = triIntersect(ray_origin, ray_direction, pgram_origin, pgram_c2, pgram_c3);
 
-            if    (t_u_v[1]>=0 && t_u_v[1] <= 1
-                && t_u_v[2]>=0 && t_u_v[2] <= 1
-                && t_u_v[1] + t_u_v[2] <=2
+            if (t_u_v[1] >= 0 && t_u_v[1] <= 1
+                && t_u_v[2] >= 0 && t_u_v[2] <= 1
+                && t_u_v[1] + t_u_v[2] <= 2
                 && t_u_v[0] >= 0)
             {
                 // The ray hit the parallelogram, compute the exact intersection
                 // point
-                Vector3d ray_intersection = ray_origin + (t_u_v[0]*ray_direction);
+                Vector3d ray_intersection = ray_origin + (t_u_v[0] * ray_direction);
 
                 // Compute normal at the intersection point
                 Vector3d ray_normal = pgram_v.cross(pgram_u).normalized();
@@ -201,7 +204,7 @@ void raytrace_perspective()
             Vector3d pgram_c2 = pgram_origin + pgram_u;
             Vector3d pgram_c3 = pgram_origin + pgram_v;
             Vector3d t_u_v = triIntersect(ray_origin, ray_direction, pgram_origin, pgram_c2, pgram_c3);
-            
+
             if (t_u_v[1] >= 0 && t_u_v[1] <= 1
                 && t_u_v[2] >= 0 && t_u_v[2] <= 1
                 && t_u_v[1] + t_u_v[2] <= 2
@@ -271,12 +274,12 @@ void raytrace_shading()
             // TODO: Prepare the ray (origin point and direction)
             const Vector3d ray_origin = camera_origin;
             const Vector3d ray_direction = pixel_center - camera_origin;
-            
+
             // Intersect with the sphere
             double a = ray_direction.dot(ray_direction);
-            double b = 2 * (ray_direction.dot(ray_origin-sphere_center));
+            double b = 2 * (ray_direction.dot(ray_origin - sphere_center));
             double c = (ray_origin - sphere_center).dot(ray_origin - sphere_center) - pow(sphere_radius, 2);
-            
+
             //use to solve quadratic equation
             double root = b * b - (4 * a * c);
 
@@ -295,37 +298,31 @@ void raytrace_shading()
 
                 // TODO: The ray hit the sphere, compute the exact intersection point
                 Vector3d ray_intersection = ray_origin + (t * ray_direction);
-                
+
                 // TODO: Compute normal at the intersection point
                 Vector3d ray_normal = ray_intersection - sphere_center;
-                /*
+
                 // TODO: Add shading parameter here
                 Vector3d light = (light_position - ray_intersection).normalized();
 
                 const double diffuse = std::max(ray_normal.dot(light), 0.0);
 
-                // Vector3d h = ((-ray_direction) + light).normalized();
-                //const double specular = std::max(0.0, std::pow(ray_normal.dot(h), specular_exponent));
+                Vector3d h = ((-ray_direction) + light).normalized();
+                const double specular = std::max(0.0, std::pow(ray_normal.dot(h), specular_exponent));
+
+                //std::cout << "h:\n" << h << "\n";
+                //std::cout << "h magnitude: " << std::sqrt(h.dot(h)) << "\n";
+                //std::cout << "dot product: " << ray_normal.dot(h) << "\n";
+                //std::cout << "after exponent: " << (std::pow(ray_normal.dot(h), specular_exponent)) << "\n\n";
+
 
                 // Simple diffuse model
                 R(i, j) = ambient + (diffuse * diffuse_color[0]) + (specular * specular_color[0]);
                 G(i, j) = ambient + (diffuse * diffuse_color[1]) + (specular * specular_color[1]);
-                B(i, j) = ambient + (diffuse * diffuse_color[2]) + (specular * specular_color[2]);
-                */
-                // TODO: Add shading parameter here
-                const double diffuse = (light_position - ray_intersection).normalized().dot(ray_normal);
+                B(i, j) = ambient + (diffuse * diffuse_color[2]) + (specular * specular_color[2] * 25000);
 
-                Vector3d h = (light_position - ray_intersection).normalized() + (camera_origin - ray_intersection).normalized();
-                const double specular = h.normalized().dot(ray_normal);
-                double spec = std::max(0., specular);
-                spec = std::pow(spec, specular_exponent);
-
-                // Simple diffuse model
-                R(i, j) = ambient + diffuse * diffuse_color[0] + spec * specular_color[0];
-                G(i, j) = ambient + diffuse * diffuse_color[1] + spec * specular_color[1];
-                B(i, j) = ambient + diffuse * diffuse_color[2] + spec * specular_color[2];
                 // Clamp to zero
-                
+
                 R(i, j) = std::max(R(i, j), 0.);
                 G(i, j) = std::max(G(i, j), 0.);
                 B(i, j) = std::max(B(i, j), 0.);
@@ -343,10 +340,11 @@ void raytrace_shading()
 
 int main()
 {
-    //raytrace_sphere();
-    //raytrace_parallelogram();
-    //raytrace_perspective();
+    raytrace_sphere();
+    raytrace_parallelogram();
+    raytrace_perspective();
     raytrace_shading();
 
     return 0;
 }
+*/
