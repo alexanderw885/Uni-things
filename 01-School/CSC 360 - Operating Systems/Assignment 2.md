@@ -56,3 +56,18 @@ what errors to correct for:
 - invalid values
 If there is an error in the input, you can terminate the entire program
 
+
+with monitor 
+(don't need to, but was in an example)
+```c
+// in monitor.c
+#include <pthread.h>
+
+wait_cust(param) {
+	sem_wait();
+}
+
+
+// in main program
+wait_cust()
+```
