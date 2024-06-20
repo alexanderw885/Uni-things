@@ -297,33 +297,24 @@ void raytrace_shading()
                 Vector3d ray_intersection = ray_origin + (t * ray_direction);
                 
                 // TODO: Compute normal at the intersection point
-                Vector3d ray_normal = ray_intersection - sphere_center;
-                /*
+                Vector3d ray_normal = (ray_intersection - sphere_center).normalized();
+
+
                 // TODO: Add shading parameter here
-                Vector3d light = (light_position - ray_intersection).normalized();
+                Vector3d l = (light_position - ray_intersection).normalized();
+                Vector3d v = (camera_origin - ray_intersection).normalized();
+                Vector3d n = ray_normal;
 
-                const double diffuse = std::max(ray_normal.dot(light), 0.0);
+                const double diffuse = std::max(n.dot(l), 0.0);
 
-                // Vector3d h = ((-ray_direction) + light).normalized();
-                //const double specular = std::max(0.0, std::pow(ray_normal.dot(h), specular_exponent));
+                Vector3d h = (v + l).normalized();
+                const double specular = std::max(std::pow(n.dot(h), specular_exponent), 0.0);
 
                 // Simple diffuse model
                 R(i, j) = ambient + (diffuse * diffuse_color[0]) + (specular * specular_color[0]);
                 G(i, j) = ambient + (diffuse * diffuse_color[1]) + (specular * specular_color[1]);
                 B(i, j) = ambient + (diffuse * diffuse_color[2]) + (specular * specular_color[2]);
-                */
-                // TODO: Add shading parameter here
-                const double diffuse = (light_position - ray_intersection).normalized().dot(ray_normal);
-
-                Vector3d h = (light_position - ray_intersection).normalized() + (camera_origin - ray_intersection).normalized();
-                const double specular = h.normalized().dot(ray_normal);
-                double spec = std::max(0., specular);
-                spec = std::pow(spec, specular_exponent);
-
-                // Simple diffuse model
-                R(i, j) = ambient + diffuse * diffuse_color[0] + spec * specular_color[0];
-                G(i, j) = ambient + diffuse * diffuse_color[1] + spec * specular_color[1];
-                B(i, j) = ambient + diffuse * diffuse_color[2] + spec * specular_color[2];
+                
                 // Clamp to zero
                 
                 R(i, j) = std::max(R(i, j), 0.);

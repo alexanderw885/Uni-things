@@ -5,6 +5,7 @@
 #include <Eigen/Dense>
 #include <algorithm>
 #include <vector>
+#include <cstdint>
 
 unsigned char double_to_unsignedchar(const double d) {
 	return round(std::max(std::min(1.,d),0.)*255);
