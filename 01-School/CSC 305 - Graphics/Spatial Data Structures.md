@@ -90,3 +90,51 @@ that node is the root
 it's constructed bottom-up, but is visited top-down
 
 it's relatively easy to update, but sometimes there can be overlap in the tree. in this picture, there's overlap between K and J
+
+# Intersection Acceleration Data Structures
+not hard to do, but hard to do efficiently
+Note that most objects don't intersect, so the sooner you can stop checking, the better
+
+## Geometric proxies
+make simple hitboxes to represent more complex shapes. Used very often in video games, and to choose whether to render objects
+
+there are 5 properties to keep in mind:
+- how expensive to compute or update?
+- how much space do you need?
+- are they invariant to the transformations applied to the object?
+- how good is the approximation?
+- how expensive are the collision queries with other objects in the scene?
+
+#### Sphere
+very easy, just needs point and radius
+very fast to compute intersection
+#### Capsule
+two points and a radius
+easy to store, easy to detect intersections, good approximation
+#### Half space
+very trivial, very useful
+things like floors and walls in games, a flat plane that only has collision on one side
+#### Axis-aligned bounding box
+easy to update, trivial to test, very compact to store
+#### Box
+more expensive then axis-aligned to store or compute intersection
+need to store intervals and rotation
+still fast to use
+#### (2D) Convex polygon
+intersection of half planes
+just need to test if point is in each half plane
+good approx, moderately complex
+#### (3D) Convex polyhedron
+intersection of half-spaces
+like polygons, but 3d
+#### General polyhedrons
+as good as it gets for accuracy
+most expensive to store, slowest to compute
+requires specific algorithms for collision tests, preprocessing, and a good data structure
+#### Composite hit boxes
+union of hit boxes, intersect iff point is in *any* of the boxes
+### How to choose which proxy?
+depends on use cases
+Note: number of types of intersection grows quadratically with each new type of proxy you add
+![[Pasted image 20240624103327.png]]
+![[Pasted image 20240624103754.png]]

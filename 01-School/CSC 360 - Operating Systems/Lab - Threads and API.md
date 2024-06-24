@@ -40,7 +40,7 @@ initialize attribute with:
 #### Termination
 thread self terminates upon finishing task.
 `pthread_exit()` to exit in execution
-`pthread_concel(ID)` cancels thread with given ID, returns 0 on success
+`pthread_cancel(ID)` cancels thread with given ID, returns 0 on success
 
 #### Joining
 `pthread_join(ID, retval)` waits for termination of other thread
