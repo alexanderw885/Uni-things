@@ -54,6 +54,64 @@ many ways to do it
 ### First Come, First Serve
 non-preemptive
 very simple, easy to implement
-
 not efficient at all
 long waiting times
+### Shortest Job First
+based on length of **next** CPU burst
+optimal for reducing average waiting time
+if preemptive, it measures shortest remaining time
+But, how do we know how long that burst will be?
+### Prediction and Exponentially Weighted Moving Average
+$$\tau_{n+1}=\alpha{}t+(a-\alpha)\tau_n$$
+estimate\[i+1\] = $\alpha$\*burst\[i\] + (1-$\alpha$)\*estimate\[i\]
+
+in essence, you start with a guess
+run burst
+average guess and actual burst time
+use that as the guess for the next burst
+
+if alpha = 1, past history is ignored and we assume next burst will be same as last burst.
+if alpha = 0, then we ignore all previous burst times, assume times are constant
+in general, alpha ~= 0.5
+
+### Priority Scheduling
+schedule jobs with greatest priority first, use other method to determine between same priority
+static: priority stays same
+dynamic: priority can change due to ageing, linger queuing time, ...
+
+### Round Robin
+each process gets a set time
+CPU time quantum/slice, usually 10-100 ms
+after that, process returns to waiting to let another process run
+Usually run with FIFO
+
+##### Time slice/ time quantum
+longer quantum more closely runs in pure FCFS
+shorter quantums are more responsive, but more overhead from context switching
+
+### Multi-queue Scheduling
+Different processes go into different groups, each of which can have its own scheduling algorithm.
+Higher priority queue - foreground queue
+- System process, interactive process
+- Usually uses round-robin
+lower priority queue - background queue
+- batch process queue or lower
+- usually uses FCFS
+once a process is put into one queue, it will not change queues
+Scheduling must be done between the two queues
+- all high-priority process goes before any lower-priority queue
+- 80/20: 80% of CPU time to high priority, 20% of time to low-priority
+
+### Multi-queue with feedback scheduling
+jobs can be moved from one queue to another if:
+- characteristics of job change between CPU and I/O intensive
+- job has waited a long time
+most flexible, but also most complex
+one example on how it could be implemented is: everything goes into top queue, after its turn with the CPU, it goes into secondary queue. after every turn, it goes into a lower priority queue
+## Thread Scheduling
+contention scope: scope in which threads compete for CPU; in what scope to apply scheduling alg
+Process Contention Scope (PCS)
+- between threads in same process
+System Contention Scope (SCS)
+- system scheduler for kernel threads on one of more CPUs
+

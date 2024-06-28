@@ -36,3 +36,5 @@ adds a third coordinate, making a 3x3 matrix for 2d space
 ![[Pasted image 20240624105750.png]]
 with this, the transformations can be represented as: 
 ![[Pasted image 20240624110041.png]]
+
+Remember, **Order of transformations matter!!!**
