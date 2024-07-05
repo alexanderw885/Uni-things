@@ -1,8 +1,8 @@
-Threads are a basic unit of CPU utilization
+Threads are a basic unit of CPU utilisation
 each process is a unit of resource allocation, and each process has at least one thread.
 
 When creating new threads, you are *not* creating new processes. Once the process ends, all threads will terminate
-Here it shows that cade, data, and files are shared by all threads in a process
+Here it shows that code, data, and files are shared by all threads in a process
 ![[Pasted image 20240604133948.png]]
 
 ##### Ex: single thread web server

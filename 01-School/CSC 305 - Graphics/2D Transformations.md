@@ -1,4 +1,4 @@
-# Linear Transformations
+a# Linear Transformations
 linear 2d transformation can be represented by a unique 2d matrix
 
 ### Scaling
@@ -6,7 +6,7 @@ s(x,y) is scaling factor
 $$ \begin{array}{cc} s_x &0 \\ 0 &s_y \end{array} $$
 with this formula, the origin does not move
 ### Rotation
-where alpha is degree to rotate
+where $\alpha$ is degree to rotate
 $$ \begin{array}{cc} 
 cos\alpha &-sin\alpha \\ 
 sin\alpha &cos\alpha \end{array} $$
@@ -24,7 +24,7 @@ in these examples, the sheared axis does not move
 ### Translation
 ![[Pasted image 20240624105215.png]]
 arguably the most useful transformation
-
+cannot be represented as matrix multiplication, as it is not a linear transformation
 # Affine Transformations
 origin is no longer always a fixed point
 Affine map = linear map + translation
@@ -38,3 +38,10 @@ with this, the transformations can be represented as:
 ![[Pasted image 20240624110041.png]]
 
 Remember, **Order of transformations matter!!!**
+### Note
+Sometimes, instead of transforming the object, it's better to transform the camera
+### Normals
+when transforming a point, how do you transform the normal?
+multiply it by the inverse translated matrix
+$v' = Mv$
+$n' = M^{-T}n$
