@@ -36,4 +36,12 @@ $v=w\times{}u$
 
 ##### Change of frame
 
-  
+now that we have the basis for the camera, we need to convert the points in the scene into the camera's basis
+with the origin o:
+$p=(p_x,p_y)=o+p_xx+p_yy$
+but we need to convert to:
+$p=(p_u,p_v)=e+p_uu+p_vv$ 
+![[Pasted image 20240708103305.png]]
+same equation but in 3d:
+![[Pasted image 20240708104328.png]]
+we only need to compute the inverse once, and use it for all points in the scene until the camera moves
