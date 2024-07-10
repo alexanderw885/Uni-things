@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#runs both scripts in the correct order.
+#raw_crawling.txt is required to have the list of URLs, one per line
+#filter.txt has all the file types we want removed from the list, one per line
+
+./script1
+./script2

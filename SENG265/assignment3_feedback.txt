@@ -1,0 +1,67 @@
+Assignment 3 Grading:
+---------------------
+Student alexanderw
+Grade: 100
+
+Compile output(5/5): 
+
+Compiled text-cleaner
+
+Compiled stop-word-remover
+
+Tests results(60/60):
+
+Test 1a: Passed
+Test 2a: Passed
+Test 1b: Passed
+Test 2b: Passed
+Test 1c: Passed
+Test 2c: Passed
+
+Tests Feedback:
+6/6 Tests passed.
+
+Committing practices(15/15):
+
+git log --oneline
+83359f4	Alexander Williams	Thu Oct 19 13:27:27 2023 -0700	lab 6 is done other then optional exercise
+90ebd0b	Alexander Williams	Thu Oct 19 12:57:21 2023 -0700	more lab 6 done
+21156f7	Alexander Williams	Thu Oct 19 11:05:45 2023 -0700	done some lab6
+2e78e7a	Alexander Williams	Wed Oct 18 23:46:55 2023 -0700	Merge branch 'master' of ssh://git.seng.uvic.ca/seng265/alexanderw
+534ea42	Alexander Williams	Wed Oct 18 23:45:13 2023 -0700	assignment 4 is broken into functions and completed
+0a6e283	Alexander Williams	Wed Oct 18 23:38:28 2023 -0700	code fully functional, need to break into functions
+8b3faeb	Alexander Williams	Wed Oct 18 23:21:21 2023 -0700	assignment 4, still need to sort dictionary
+fb6c40e	Juan Giraldo	Tue Oct 17 20:45:46 2023 -0700	Assigment 2 feedback
+379b52e	Alexander Williams	Thu Oct 12 13:37:49 2023 -0700	lab 5 is done for real! I might have forgotten a part last time I said that
+5f9e679	Alexander Williams	Wed Oct 11 19:51:43 2023 -0700	Lab 5 has been completed!
+5c315e3	Alexander Williams	Mon Oct 9 16:40:18 2023 -0700	added comments, assignment 3 is even more completed!
+2493482	Alexander Williams	Mon Oct 9 16:32:02 2023 -0700	Completed assignment 3!
+4a5a189	Alexander Williams	Mon Oct 9 16:28:03 2023 -0700	completed stemmer.c!
+10c98b4	Alexander Williams	Mon Oct 9 16:14:52 2023 -0700	Completed stop-word-remover for assignment 3
+6b1a3ed	Alexander Williams	Mon Oct 9 16:09:04 2023 -0700	text_cleaner is completed, also may have messed up the git commit message? gotta figure that out
+3b6dbb4	Alexander Williams	Fri Oct 6 13:11:34 2023 -0700	this is the newer version of my last test
+ed7106c	Alexander Williams	Fri Oct 6 13:08:47 2023 -0700	I'm trying to figure out how tags work, ignore this
+694ab00	Alexander Williams	Thu Oct 5 14:20:05 2023 -0700	finished lab 4
+6a3d801	Alexander Williams	Sun Oct 1 17:08:28 2023 -0700	Now with some functions! still will add more if I get a chance, but I have midterms so maybe not
+618fa16	Alexander Williams	Sat Sep 30 20:12:53 2023 -0700	gets the job done successfully! now with any time left, hopefully will make it look better no promises
+b32027d	Alexander Williams	Sat Sep 30 16:52:37 2023 -0700	nearly finished, just need to figure out why capital letters are causing issues
+30f67ed	Alexander Williams	Thu Sep 21 13:18:09 2023 -0700	commit log has text in it now
+ac38316	Alexander Williams	Thu Sep 21 13:15:34 2023 -0700	adding the commit_log.txt file
+d69036e	Lynn Palmer	Wed Sep 13 11:16:59 2023 -0700	initial
+
+
+Modularization(10/10):
+
+- Appropriate use of code segmentation (i.e. function creation and
+  use) that facilitates the usability and eventual maintainability of
+  your solution.
+
+Documentation(10/10):
+
+- Good formatting and structure of the code that facilitates reading
+  and understanding.
+
+- Good naming conventions for functions and variables.
+
+- Good attempt at documenting the code using comments to describe
+  important aspects of the solution.

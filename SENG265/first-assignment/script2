@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#script2 requires the filtered_crawling.txt as created in script1. script 3 creates directories for each directory in the URL, and then downloads the URL to the correct directory if it links to a file
+filename=filtered_crawling.txt
+i=0
+home=$(pwd)
+OLDIFS=$IFS
+awk -F '[/ \t]' '{print NF}' $filename > counts
+home=$(pwd)
+
+cat $filename | while read -r line
+do
+	((i++))
+	cd $home
+	wordcount=$(sed "$i!d" counts)
+	j=0
+
+	IFS='/'
+	for word in $line
+	do
+
+		
+		IFS=$OLDIFS
+		((j++))
+
+		if [[ j -gt 2 && -d $word ]]
+		then
+			cd $word
+
+		elif [[ j -gt 2 && j -lt $wordcount ]]
+		then
+			mkdir $word
+			cd $word
+
+		elif [[ ! $word == "*" && j -eq $wordcount && j -gt 3 ]]
+		then
+
+			echo $line
+			curl $line > $word
+		fi
+	done
+	IFS=$OLDIFS
+	cd $home
+done
+rm counts
+

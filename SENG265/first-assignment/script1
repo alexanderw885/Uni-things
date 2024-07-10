@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#this file takes in raw_crawling.txt as a list of all urls, one per row
+#this file also takes filter.txt, with every file type we want excluded in a list, one per row
+#outputs filtered_crawling.txt, a list of urls approved for future steps.
+filename='raw_crawling.txt'
+grep -v --file=filter.txt $filename > filtered_crawling.txt
+
+
+
