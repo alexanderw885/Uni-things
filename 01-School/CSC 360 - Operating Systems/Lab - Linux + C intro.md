@@ -16,7 +16,7 @@ zip assignments into one package before sending to remote
 and to extract the files out:
 ```tar -zxvf```
 
-all linux basic linux commands from seng265 work
+all linux basic linux commands from SENG 265 work
 
 ##### Limit your processes to prevent bit issues!
 ```ulimit -u``` shows you max number of processes allowed
