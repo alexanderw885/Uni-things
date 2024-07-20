@@ -1,4 +1,4 @@
-need to synchronize between multiple programs
+need to synchronise between multiple programs
 (producer-consumer, multi-threading,...)
 
 with threads, if you have multiple threads all accessing and changing the same data, results may get lost and overwritten, so you can't have them do that

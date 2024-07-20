@@ -1,4 +1,4 @@
-Queues are a type of [list](01%20types%20of%20lists).
+Queues are a type of [list](01%20Types%20of%20lists.md).
 
 can be implemented with [[arrays]] or [[linked lists]].
 

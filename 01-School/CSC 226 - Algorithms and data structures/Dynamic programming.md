@@ -90,7 +90,7 @@ thus, $F(n)\in{O}(n)$
 
 ## Shortest Path Problem 
 
-Given directed [graph](graphs) $G(V,E)$ with edge weight,
+Given directed [graph](graphs.md) $G(V,E)$ with edge weight,
 find the shortest path from vertex $u$ to vertex  $v$
 
 

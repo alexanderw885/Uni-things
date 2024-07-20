@@ -60,7 +60,7 @@ what if multiple users want to access the same file
 ### Implementation
 high level view
 different operating systems use different implementations:
-DOS: FAT(file allocation table) - assignment 3
+DOS: [FAT](\(FAT%20(File%20Allocation%20Table\))(file allocation table) - assignment 3
 Linux: inode
 
 file system can be divided into Sectors, which are often in the range of 512 bytes to 4KB

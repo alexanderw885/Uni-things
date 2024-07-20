@@ -1,4 +1,4 @@
-Heaps are a type of [list](01%20types%20of%20lists).
+Heaps are a type of [list](01%20Types%20of%20lists.md).
 
 often specifically min-heaps or max-heaps, they are a subcategory of [[binary trees]] that follow extra rules. For this example, we'll use left-justified min-heaps.
 **The parent must always be smaller than its children.**

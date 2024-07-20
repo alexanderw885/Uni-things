@@ -91,7 +91,15 @@ vectors are like python lists
 lists are double linked lists
 arrays must define length at compile time
 
-
+### Lambda function
+create function that's treated like a variable
+```c++
+program.Example = [](int i, int j)
+{
+// function
+}; // note the semicolon
+```
+![[Pasted image 20240711104100.png]]
 
 ## Eigen
 how to use Eigen/Dense

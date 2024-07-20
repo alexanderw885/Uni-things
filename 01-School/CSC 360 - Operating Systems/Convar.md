@@ -1,4 +1,4 @@
-related to [[Synchronization]]
+related to [[Synchronisation]]
 
 Used when we want to conditionally check if  some condition is met
 differences to semaphore

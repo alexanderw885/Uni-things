@@ -34,5 +34,9 @@ for all x do:
 done
 ```
 ### Object depth sorting
-you can sort be depth, but not only is that inefficient, it also doesn't work all the time.
+you can sort be depth, but not only is that inefficient, it also doesn't work all the time. So how do we figure out which objects are behind other?
 #### z-buffering
+render both the image and the depth buffer, which only stores distance to the camera
+when new fragment comes in, only draw if it is closer to you
+does not work for transparency, but it's a very cheap operation
+

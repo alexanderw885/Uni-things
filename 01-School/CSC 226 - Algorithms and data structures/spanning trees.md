@@ -28,7 +28,7 @@ this method is O(n!), but it does meet all requirements
 terrible idea, do better.
 
 
-### [Greedy](greedy%20algorithms) solution (Prim's algorithm) 
+### [Greedy](Greedy%20algorithms.md) solution (Prim's algorithm) 
 uses [[Vertex cut]]
 with a graph $G(V,E)$, take vertex cut of $(S,T)$ where $S$ is all but one vertex and $T$ contains the remaining vertex
 
