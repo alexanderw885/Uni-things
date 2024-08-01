@@ -1,5 +1,5 @@
-# User Authorization
- Goal: determine effects of queries that modify authorization controls
+# User Authorisation
+ Goal: determine effects of queries that modify authorisation controls
 
 what if you want to share database with someone, but don't trust them to damage the database? Use privileges to allow them access to certain commands
 ### Some Privileges

@@ -413,8 +413,7 @@ Vector4d shoot_ray(const Vector3d &ray_origin, const Vector3d &ray_direction, in
     {
         
         Vector3d bounce_direction = (ray_direction - (2 * ray_direction.dot(N)) * N).normalized();
-        reflection_color += shoot_ray(p + (0.0001 * bounce_direction), bounce_direction, max_bounce - 1);
-
+        reflection_color += shoot_ray(p + (0.0001 * (bounce_direction)), bounce_direction, max_bounce - 1);
         for(int i=0; i<4; i++)
             reflection_color[i] *= refl_color[i];
     }

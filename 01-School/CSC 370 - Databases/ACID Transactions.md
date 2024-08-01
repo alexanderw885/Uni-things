@@ -5,7 +5,7 @@ C - Consistency
 I - Isolation
 D - Durability
 
-# Atomicity
+# [[Atomicity]]
 Transactions should occur atomically, i.e. be indivisible
 each query is atomic, and cannot be broken down.
 
@@ -27,7 +27,7 @@ reject would prevent it
 setNULL would imply this is an intended action
 
 bottom right would be a violation, ages would not be supposed to be negative
-# Isolation (serializability)
+# [Isolation](Concurrency) (serializability)
 results of a transaction should be viewed as independent of other concurrent transactions
 
 users should not be able to tell that other users are accessing the database
@@ -36,7 +36,7 @@ users should not be able to tell that other users are accessing the database
 which is isolation failure?
 ![[Pasted image 20240612130726.png]]
 top right is the isolation failure, along with a durability failure. Your actions were dependent on someone else's current activity in the database, which was then reversed
-# Durability
+# [[Durability]]
 once a transaction is committed, it is permanent
 In a database, you want to prevent data loss
 

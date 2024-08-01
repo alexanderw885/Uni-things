@@ -6,7 +6,7 @@ We can construct a model of computation to determine how to analyse computation
 different models have different focuses on what they prioritise
 
 ### Random Access Machine (RAM)
-This was covered in CSC 226
+This was covered in [CSC 226](asymptotic%20notation)
 
 Why not just run and measure algorithms?
 - Experiments can only be done on a limited set of inputs
@@ -65,6 +65,13 @@ in this case, the EM model gives us $O(\frac{mn}{B})$, where B is block size
 in this case, we read in 2 blocks of R and 1 blocks of S, then compare everything
 we can use the remaining block as a buffer for outputs.
 Since we're taking advantage of blocks, this is significantly faster
+
+In BLNJ, it's given a smaller and larger thing to loop over, it's better for the smaller item to be the outer loop
+
+notation:
+B(X) = number of blocks of X
+B(M) = blocks in memory
+B(O) = blocks you can output???
 
 ##### Naive Linked List
 has 3 operations

@@ -1,6 +1,6 @@
 
 
-by thinking of queries as compositions of operators, you can rewrite queries to be more expressive
+by thinking of queries as compositions of [operators](Referential%20integrity%20constraints), you can rewrite queries to be more expressive
 
 think of arithmetic functions
 $f(x) = 2x$

@@ -25,6 +25,7 @@ Shows(**date**, **artist**)
 TicketedTo(**username, date, artist** ticket_id)
 
 ## more constraints
+[[Referential integrity constraints]]
 #### age cannot be negative
 $\sigma_{age\ is\ null\ \lor\ age<0}(Users)=\emptyset$ 
 ```sql

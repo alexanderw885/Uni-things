@@ -11,10 +11,10 @@ to project functional dependencies make power set of all FDs, remove trivial/sem
 - this makes all dependencies for a subset
 
 ### Dependency preservation
-with BCNF, it's possible to lose constraints when performing the decomposition
+with [BCNF](BCNF%20Decomposition), it's possible to lose constraints when performing the decomposition
 
 ### Prime Attributes
-an attribute is prime iff it is part of a key (Not a superkey)
+an attribute is prime iff it is part of a [key](Functional%20Dependencies%20and%20Keys) (Not a superkey)
 example:
 ```
 CinemaShowings(city, theatre, title)

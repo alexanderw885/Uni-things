@@ -24,3 +24,40 @@ but how do you choose which page to swap out?
 ##### FIFO
 put pages into [queue](queues.md). When queue is full, dequeue first page put in
 Strangely, the more frames (spaces) in the queue, there can be more frame faults
+##### OPT/MIN
+the theoretical optimal algorithm will replace the page that won't be used for the longest time. This obviously cannot be made for real, as it needs to know what pages will be needed ahead of time, but it's a benchmark to compare other algorithms to
+##### LRU (Least Recently Used)
+removes page that has not been used for the longest time
+can be implemented with a stack, or by storing use time in data
+counter:
+- give every page 8 bits to track use time
+- when visiting page, bit-shift right all pages and set most significant bit of visited page to 1
+
+Linux used algorithms based on LRU
+##### Second chance algorithms
+also has reference bit, but only one bit this time
+queue of pages like FIFO, but when you visit a page, set the reference to 1
+when you need to remove a page, look at the reference bit
+- if reference == 1, set reference to 0 and find another page
+- if reference == 0, swap out that page
+if every page was used recently, second-chance just becomes FIFO
+##### page buffering
+Not an algorithm, is used with other algorithms
+keep a pool of free pages, so you can swap in a needed page without delay
+Then you can remove a page after depending on the chosen algorithm
+
+### Page Allocation
+any process needs a minimum number of pages to run, there's two main ways to allocate them
+##### Fixed allocation
+- equal allocation: m frames, n processes, each process gets m/n frames. Any extra are free-buffer pool
+- Proportional allocation: Frames are granted proportional to the size of the process
+##### Priority allocation
+higher priority process gets more frames when needed.
+On replacement, a process will either replace its own frame or it will take from a lower priority process
+### Thrashing
+if a process cannot keep its minimum amount of pages, it must be swapped out.
+If a frame can keep its minimum frames, but cannot keep the frames it uses regularly, it will start thrashing
+thrashing: where the process spends most of its time swapping pages, getting many page faults
+
+When cpu usage is low, the computer will schedule more processes
+When thrashing, cpu usage is low but there's too many processes. But, since cpu usage is low, the computer will keep scheduling more and more processes

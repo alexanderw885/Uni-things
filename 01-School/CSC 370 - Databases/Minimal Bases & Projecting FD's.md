@@ -1,6 +1,6 @@
-correctly project set of functional dependencies onto sub-relation, and produce a minimal basis
+correctly project set of [functional dependencies](Functional%20Dependencies%20and%20Keys) onto sub-relation, and produce a minimal basis
 ![[Pasted image 20240626124340.png]]
-in top left, B defines C, but not on the left. Not in BCNF
+in top left, B defines C, but not on the left. Not in [BCNF](BCNF%20Decomposition)
 same for bottom right
 bottom left is good
 
@@ -55,8 +55,6 @@ So **none** are a minimal basis
 
 calculating a minimal basis:
 if we have a set of functional dependencies, how do we produce a minimal basis?
-
-TODO
 
 ### Projecting FDs
 lets project R(A,B,C,D) onto S(A,B,C), then project following FDs onto S as well:
