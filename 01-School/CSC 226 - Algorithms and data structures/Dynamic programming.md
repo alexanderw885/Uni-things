@@ -3,7 +3,7 @@ A good thing to do to make programs faster. One of the **Most important** parts 
 
 ### Memoization
 
-If a "sub-problem" is reused at anytime, compute it only once and store the result (memorize it)
+If a "sub-problem" is reused at anytime, compute it only once and store the result (memoize it)
 Solve the small problems first, then solve the large problem after.
 for this to work, the problem must have the following properties:
 
@@ -43,7 +43,7 @@ $\geq$ $2T(n-2)+O(1)$
 $\geq$ $2(2T(n-4)+O(1))$
 ...
 $\geq$ $2^k(T(n-2k)+O(1))$
-$\geq n^{n/2}$ <- Exponential time, not great
+$\geq n^{n/2}$ <- [Exponential time](asymptotic%20notation), not great
 if only there was a better way!
 
 ### Better way with Dynamic Programming
@@ -58,7 +58,7 @@ Fibonacci subproblems:
 F(n), F(n-1), F(n-2), ... , F(1)
 Observations:
 1) only polynomial num. of subproblems
-2) no cyclic dependances
+2) no cyclic dependencies
 
 ```
 Global array val[n] // initialized to NULL
@@ -85,9 +85,6 @@ it is already calculated.
 F(n) has n subproblems, each taking O(1) time.
 $O(n)*O(1) = O(n)$
 thus, $F(n)\in{O}(n)$
-
-
-
 ## Shortest Path Problem 
 
 Given directed [graph](graphs.md) $G(V,E)$ with edge weight,

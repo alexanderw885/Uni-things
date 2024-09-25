@@ -1,10 +1,10 @@
 
-asymptotic notation is a method of analyzing the runtime of algorithms
+asymptotic notation is a method of analysing the runtime of algorithms
 
 ### Big O notation
 $f(n)\in{}O(g(n))$ if there exists a $c$ such that: 
 $$f(n)\leq{}c*g(n) \text{ for all } n>n_0$$
-Big O notation is often used in analyzing running times for algorithms
+Big O notation is often used in analysing running times for algorithms
 
 
 ### Little o notation

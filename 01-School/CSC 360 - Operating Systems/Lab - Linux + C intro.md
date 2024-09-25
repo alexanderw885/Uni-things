@@ -8,7 +8,7 @@ remote access with PuTTy o in terminal to access linux server:
 
 let uid = alexanderw885
 remote copy file:
-```scp uid@from_host:dir uid@to_host:dir```
+```scp alexanderw885@from_host:dir alexanderw885@to_host:dir```
 
 zip assignments into one package before sending to remote
 ```tar -czvf zipname file1 file2...```

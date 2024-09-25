@@ -1,0 +1,91 @@
+---
+title: "Set_5"
+author: "Alexander Williams"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# t-tests
+
+examining equality of small samples.
+
+One method we used earlier is the bootstrap test, sampling values from the small dataset to get a larger sample size. This can be used for any type of distribution
+
+An alternative is to use a  t-distribution, which makes the assumption, which assumes that the data is from a normal distribution. Other assumptions are also made on the variance of the two populations, and whether or not the two samples are independent
+
+these assumptions lead to 3 different types of t-test
+
+1. pooled t-test (assume equal variance between both population)
+2. Welch/unpooled t-test (no assumption on equal variance)
+3. paired t-test (samples are dependent, data is all in pairs)
+
+### pooled t-test
+
+we assume that for the first sample:
+$$X_i\sim{}N(\mu_1,\sigma^2),i=1,...,m$$
+and for the second:
+$$Y_i\sim{}N(\mu_2,\sigma^2),i=1,...,m$$
+We also assume the two samples are independent, and that $\sigma^2$ is the same in both samples.
+
+we can put these together to get the equation:
+$$\bar{X}-\bar{Y}\sim{}N(\mu_1-\mu_2,\sigma^2(\frac{1}{m}+\frac{1}{n})$$
+we can rearrange this until we get:
+$$\frac{\bar{X}-\bar{Y}-(\mu_1-\mu_2)}{\sigma\sqrt{\frac{1}{m}+\frac{1}{n}}}\sim{}N(0,1)$$
+but what if we don't know sigma? We can replace it with sample variance $s$. Remember that we're assuming both have the same variance, so we calculate $s_1,s_2$, and then average them based on size of each sample.
+$$s_p^2=\frac{(m-1)s_1^2+(n-1)s_2^2}{m+n-2}$$
+finally, we get the equation:
+$$\frac{\bar{X}-\bar{Y}-(\mu_1-\mu_2)}{s_p\sqrt{\frac{1}{m}+\frac{1}{n}}}\sim{}t_{m+n-2}$$
+It's no longer normal, but instead it's a t distribution with $m+n-2$ degrees of freedom.
+
+this form is recognizable, it's the same as z-tests
+$$\frac{\text{Estimate - Parameters}}{\text{Estimate Standard Error (ese)}}\sim{}N(0,1)$$
+
+once we use this to get our pivotal quantity, we can proceed just like normal to determine our critical values. The only difference is that we will use the distribution $t_{m+n-2, \alpha}$ instead of $Z_\alpha$
+
+to get our confidence interval, we use the equation:
+$$(\bar{X}-\bar{Y})\pm{}t_{m+n-2, \alpha/2}s_p\sqrt{\frac{1}{m}+\frac{1}{n}}$$
+
+___
+
+# Example: latent heat
+two methods, A and B, are used to determine latent heat of fusion of ice. We want to know if the two methods differ, and by how much.
+```{r}
+ice <- read.table(file='~/Documents/STAT 359/data/latent_heat.txt',
+                  sep="",
+                  header=TRUE)
+library(knitr)
+kable(ice, caption = 'Data Table')
+
+# remove NA values
+methodA<-ice$Method_A[!is.na(ice$Method_A)]
+methodB<-ice$Method_B[!is.na(ice$Method_B)]
+boxplot(methodA,methodB,names=c('Method A','Method B'),col="green")
+```
+The distributions seem reasonably separated, lets use the t-test
+```{r}
+t.test(methodA,
+       methodB,
+       alternative="two.sided", # just checking if not the same
+       mu=0, # parameters, mu_1 - mu_2
+       var.equal=TRUE) # assume the variances are equal
+```
+the confidence interval does not include 0 and the p-val is less than alpha, so we have strong evidence that the null hypothesis is false. if the distributions are the same, there is only a 0.2% chance of observing data at least this extreme.
+
+Lets look closer at the data
+```{r}
+qqnorm(methodA,
+       main="Method A data")
+qqnorm(methodB,
+       main="Method B data")
+```
+
+
+
+
+
+
+

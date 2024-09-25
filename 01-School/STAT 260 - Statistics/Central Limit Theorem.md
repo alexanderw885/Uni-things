@@ -37,7 +37,7 @@ $P(Y=16)=0.4207^{16}$
 ### Central limit theorem
 Let $X_1,X_2,...,X_n$ be $iid$ rand. vars, each with mean $\mu$, s.d. \sigma$.
 Provided that n is large enough:
-1. $\bar{X}$ is approximately normally distributed with mean $\mu$, s.d. $\sigma/n$
+1. $\bar{X}$ is approximately normally distributed with mean $\mu$, s.d. $\sigma/n$ 
 2. $T=\sum_{i=1}^nX_i$ is approximately normally distributed with mean $n\mu$, s.d. $\sigma\sqrt{N}$
 3. above is true no matter distribution of $X_i$ (binomial, Poisson, exponential, normal...)
 4. for us, $n\geq30$
