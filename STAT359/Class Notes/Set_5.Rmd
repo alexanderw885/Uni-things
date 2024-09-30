@@ -41,6 +41,10 @@ finally, we get the equation:
 $$\frac{\bar{X}-\bar{Y}-(\mu_1-\mu_2)}{s_p\sqrt{\frac{1}{m}+\frac{1}{n}}}\sim{}t_{m+n-2}$$
 It's no longer normal, but instead it's a t distribution with $m+n-2$ degrees of freedom.
 
+This is a pooled t-test, so we're assuming variance is the same between the two distribution. What if we don't make that assumption?
+This adds another unknown variable, so we'd prefer to use a pooled test, but it's easy to modify in order to account for different variances
+$$\frac{\bar{X}-\bar{Y}-(\mu_1-\mu_2)}{\sqrt{\frac{s_1^2}{m}+\frac{s_2^2}{n}}}\sim{}t_{m+n-2}$$
+
 this form is recognizable, it's the same as z-tests
 $$\frac{\text{Estimate - Parameters}}{\text{Estimate Standard Error (ese)}}\sim{}N(0,1)$$
 
@@ -54,7 +58,7 @@ ___
 # Example: latent heat
 two methods, A and B, are used to determine latent heat of fusion of ice. We want to know if the two methods differ, and by how much.
 ```{r}
-ice <- read.table(file='~/Documents/STAT 359/data/latent_heat.txt',
+ice <- read.table(file='~/Documents/uni/STAT359/data/latent_heat.txt',
                   sep="",
                   header=TRUE)
 library(knitr)
@@ -65,6 +69,7 @@ methodA<-ice$Method_A[!is.na(ice$Method_A)]
 methodB<-ice$Method_B[!is.na(ice$Method_B)]
 boxplot(methodA,methodB,names=c('Method A','Method B'),col="green")
 ```
+
 The distributions seem reasonably separated, lets use the t-test
 ```{r}
 t.test(methodA,
@@ -73,6 +78,7 @@ t.test(methodA,
        mu=0, # parameters, mu_1 - mu_2
        var.equal=TRUE) # assume the variances are equal
 ```
+
 the confidence interval does not include 0 and the p-val is less than alpha, so we have strong evidence that the null hypothesis is false. if the distributions are the same, there is only a 0.2% chance of observing data at least this extreme.
 
 Lets look closer at the data
@@ -83,9 +89,143 @@ qqnorm(methodB,
        main="Method B data")
 ```
 
+There's not many data points so it's hard to come to conclusions on if the data is normal or not, or there's not enough evidence to say the distributions are not normal.
+
+```{r}
+var(methodA)
+var(methodB)
+```
+
+the variances do appear to be different, it may be worth testing with an unpooled t-test
+
+```{r}
+t.test(methodA,
+       methodB,
+       alternative="two.sided",
+       mu=0,
+       var.equal=FALSE)
+```
+
+while the p-value is larger, it's still very unlikely that both distributions have the same mean. We have less confidence, but the p-value is still veyr small
+
+___
+
+# Example: Iron Retention
+
+Investigators are determining if Fe2+ and Fe3+ are retained differently, to find which is better as a dietary supplement
+
+6 group of mice, given either 10.2, 1.2, or 0.3 millimolar or either Fe2+ or Fe3+
+
+```{r}
+
+iron <- read.table(file='~/Documents/uni/STAT359/data/iron.txt',
+                    sep="",
+                    header=TRUE)
+kable(iron, caption = 'Iron Retention Data Table')
+boxplot(iron$Fe3,
+        iron$Fe2,
+        names=c("Fe3+","Fe2+"),
+        main="Percent retained",
+        col=5)
+```
+
+There's a lot of overlap in these distributions. Without any analysis, it isn't a large stretch to say the distributions are the same. Lets see if it appears normal
+
+```{R}
+qqnorm(iron$Fe3)
+qqnorm(iron$Fe2)
+```
+
+Both of these distributions appear to be skewed to the right, we can't make the assumption of normality. We can either use a different test, or transform the data to make it symmetric.
+
+Lets use a log transformation to make it symmetrical
+```{r}
+boxplot(log(iron$Fe3),
+        log(iron$Fe2),
+        names=c('Fe3+','Fe2+'),
+        col='green',
+        main='Percent Retained - log Transformed')
+
+qqnorm(log(iron$Fe3))
+qqnorm(log(iron$Fe2))
+```
+
+Still a large amount of overlap on the box plots, and the data looks a lot more normal. We can run a t-test om this data
+
+```{r}
+t.test(log(iron$Fe3),
+       log(iron$Fe2),
+       alternative="two.sided",
+       mu=0,
+       var.equal=TRUE)
+```
+
+As we expected earlier, the p-value is large. Assuming they're the same, about 36% of the time we'd expect a difference at least this extreme. There is no evidence to reject the null hypothesis. Do remember, this was done on the log scale.
+
+___
+
+### How do we decide whether or not to use a pooled t-test?
+
+one options is to use a test for variance, to decide if we should use pooled or unpooled.
+
+This test is based off of the F-distribution. Let $X\sim\chi_m^2$ and $Y\sim\chi_n^2$. Let X and Y be independent random variables.
+
+the $F_{m,n}$ distribution is defined as: $Z=\frac{X/m}{Y/n}$ .
+
+Lets graph this distribution
+
+```{r}
+x <-seq(0,5,0.01)
+
+dF5_5<-df(x,df1=5,df2=5) # input values, and the two degrees of freedom
+dF5_20<-df(x,df1=5,df2=20)
+dF10_20<-df(x,df1=10,df2=20)
+dF15_15<-df(x,df1=15,df2=15)
+
+plot(c(min(x),
+       max(x)),
+     c(min(dF5_5,dF5_20,dF10_20,dF15_15),
+       max(dF5_5,dF5_20,dF10_20,dF15_15)),
+     type="n",
+xlab="x",ylab="Density function: f(x)")
+title("Densities of the F distribution")
+lines(x,dF5_5)
+lines(x,dF5_20,col="red")
+lines(x,dF10_20,col="green")
+lines(x,dF15_15,col="blue")
+legend(x='topright',
+       legend=c('F5_5','F5_20','F10_20','F15_15'),
+       fill=c('black','red','green','blue'))
 
 
+```
 
+The F-test for $H_0: \sigma_1^2=\sigma_2^2$ is based on:
+$$T=\frac{max\{s_1^2, s_2^2\}}{min\{s_1^2, s_2^2\}}$$
+Just divide the bigger sample distribution by the smaller one, and we get a test statistic just like we do when using a t-test or z-test
 
+When getting confidence intervals, we use a $F_{m-1,n-1}$ distribution
 
+___
 
+# Example: Latent Heat
+
+Same dataset as earlier
+```{r}
+kable(ice)
+var.test(methodA,methodB)
+```
+
+Note this function divides smaller variance by larger variance, but that's just a different way of doing it.
+
+The p-value is quite large, there's no evidence against the null hypotheses. There's no evidence that the distributions have different variances
+
+# Example: Iron
+
+same dataset as earlier
+```{r}
+kable(iron)
+var.test(iron$Fe3, iron$Fe2)
+```
+
+Again, we have no evidence that the two distributions have different variances
