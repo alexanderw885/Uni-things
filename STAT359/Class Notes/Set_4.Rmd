@@ -45,7 +45,7 @@ ___
 
 # Example: Skewness
 ```{r}
-stereograms<-read.table(file="~/Documents/STAT 359/data/stereograms.txt",
+stereograms<-read.table(file="~/Documents/uni/STAT359/data/stereograms.txt",
                          sep="",
                          header=TRUE)
 time.NV<-stereograms$fusion_time[stereograms$group=='NV']
@@ -109,7 +109,7 @@ ___
 # Example - Slalom times
 
 ```{r}
-slalom2014<-read.table(file="~/Documents/STAT 359/data/slalom2014.txt",
+slalom2014<-read.table(file="~/Documents/uni/STAT359/data/slalom2014.txt",
                          sep="",
                          header=TRUE)
 names(slalom2014)
@@ -156,3 +156,137 @@ Time.skew.est
 
 # Kurtosis
 
+Measure of fourth moment of distribution, measures weight of tails and how pointed/flat the peak is relative to a normal distribution.
+$$Kurt[X]=E[(\frac{X-\mu}{\sigma})^4]-3$$
+We can calculate sample kurtosis with:
+$$\hat{Kurt}=\frac{\sum_{i=1}^n(y_i-\bar{y})^4}{ns^4}-3$$
+
+Positive kurtosis means heavier tails, like a t-distribution
+```{r}
+x<-seq(-5,5,.01)
+y.norm<-dnorm(x,mean=0,sd=1)
+y.t1<-dt(x,df=1)
+y.t2<-dt(x,df=2)
+y.t3<-dt(x,df=3)
+y.t4<-dt(x,df=4)
+y.t10<-dt(x,df=10)
+
+# set up the plot area
+plot(c(min(x),max(x)),c(min(y.norm,y.t1,y.t2,y.t3,y.t4,y.t10),max(y.norm,y.t1,y.t2,y.t3,y.t4,y.t10)),type="n",
+xlab="x",ylab="Density function: f(x)")
+title("Comparing the Normal and t-distribution")
+lines(x,y.norm)
+lines(x,y.t10,lty=2,col="red")
+lines(x,y.t4,lty=3,col="red")
+lines(x,y.t3,lty=4,col="red")
+lines(x,y.t2,lty=5,col="red")
+lines(x,y.t1,lty=6,col="red")
+```
+
+Negative kurtosis means lighter tails, and often a flatter shape. A uniform distribution is a good example
+
+Function to estimate kurtosis
+```{r}
+kurtosis<-function(x)
+  {
+  m4<-sum((x-mean(x))^4)/length(x)
+  s4<-var(x)^2
+  m4/s4 - 3
+  }
+```
+
+What values to you get with a normal distribution? We expect 0
+```{r}
+x.norm <- rnorm(1000)
+x.norm.kurt <- kurtosis(x.norm)
+x.norm.kurt
+
+# We can bootstrap it to get a confidence interval for the kurtosis
+x <- x.norm # data to bootstrap
+B <- 10000 # times to bootstrap
+
+x.boot <- matrix(data=sample(x=x,size=B*length(x),replace=TRUE),
+                 nrow=length(x),
+                 ncol=B)
+x.boot.kurt <- apply(x.boot,
+                     2,
+                     kurtosis)
+boot.interval <- quantile(x.boot.kurt,
+                          probs=c(0.025, 0.975))
+hist(x.boot.kurt, main='Empirical Distribution for kurtosis, normal distribution',xlab='Sampled Values')
+abline(v=x.norm.kurt, col='red') ## arguments can be a and b, h, or v
+```
+
+The value varies every time it's run, but should be very close to zero on average. Lets do the same steps again, but with a t-distribution
+```{r}
+x.t <- rt(1000, df=4)
+x.t.kurt <- kurtosis(x.t)
+x.t.kurt
+
+# bootstrap
+x <- x.t
+B <- 10000 # times to bootstrap
+
+x.boot <- matrix(data=sample(x=x,size=B*length(x),replace=TRUE),
+                 nrow=length(x),
+                 ncol=B)
+x.boot.kurt <- apply(x.boot,
+                     2,
+                     kurtosis)
+boot.interval <- quantile(x.boot.kurt,
+                          probs=c(0.025, 0.975))
+hist(x.boot.kurt, main='Empirical Distribution for kurtosis, t-distribution',xlab='Sampled Values')
+abline(v=x.t.kurt, col='red') ## arguments can be a and b, h, or v
+```
+
+This is much higher than the normal distribution, implying excess kurtosis compared to the normal distribution.
+
+What a higher kurtosis means is that data is less likely to be near the mean. Greater kurtosis means it's more likely to see an extreme result
+
+___
+
+# Example: stereograms
+```{r}
+kurt.time.NV <- kurtosis(time.NV)
+kurt.time.VV <- kurtosis(time.VV)
+kurt.time.NV
+kurt.time.VV
+# Is that a very large kurtosis, or is there too much uncertainly due to small sample size? lets bootstrap
+x <- time.NV
+B <- 10000 # times to bootstrap
+
+x.boot <- matrix(data=sample(x=x,size=B*length(x),replace=TRUE),
+                 nrow=length(x),
+                 ncol=B)
+x.boot.kurt <- apply(x.boot,
+                     2,
+                     kurtosis)
+boot.interval <- quantile(x.boot.kurt,
+                          probs=c(0.025, 0.975))
+hist(x.boot.kurt, main='Empirical Distribution for kurtosis, time.NV',xlab='Sampled Values')
+abline(v=x.t.kurt, col='red') ## arguments can be a and b, h, or v
+
+boot.interval
+```
+
+It's hard to say, there's a lot of uncertainty. The expected values appears to be around 10. but the confidence interval does include 0, so we can't reject the possibility that the true kurtosis is normal.
+
+```{r}
+x <- time.VV
+B <- 10000 # times to bootstrap
+
+x.boot <- matrix(data=sample(x=x,size=B*length(x),replace=TRUE),
+                 nrow=length(x),
+                 ncol=B)
+x.boot.kurt <- apply(x.boot,
+                     2,
+                     kurtosis)
+boot.interval <- quantile(x.boot.kurt,
+                          probs=c(0.025, 0.975))
+hist(x.boot.kurt, main='Empirical Distribution for kurtosis, time.VV',xlab='Sampled Values')
+abline(v=x.t.kurt, col='red') ## arguments can be a and b, h, or v
+
+boot.interval
+```
+
+The interval is much smaller, and also contains 0 so we have no evidence that the kurtosis is not normal

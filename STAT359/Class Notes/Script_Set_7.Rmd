@@ -1,0 +1,36 @@
+---
+title: "Set_7"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Mann-Whitney Test, a Nonparametric Two Sample Procedure
+
+In a two-sample setting, where the data isn't paired, the Mann-Whitney test is a non-parametric alternative to the t-test without any assumptions. This test again uses the idea of replacing the actual data values with their ranks, like the signed-rank test
+
+we group both samples together, ranking all $m+n$ samples. Our test statistic $T_Y$ is then the sum of all ranks from the first sample
+
+Under the null hypothesis that both samples are from the same distribution, it's equally likely that either sample will have larger ranks assigned to it.
+
+each of the $_{m+n}C_m$ assignments of ranks to the $y$ sample is equally likely, with probability $(_{m+n}C_m)^{-1}$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

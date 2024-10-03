@@ -201,7 +201,7 @@ this is the opposite of a t-distribution plot. The left tail bends up and the ri
 ___
 # Example: Stereogram dataset
 ```{r}
-stereograms<-read.table(file="~/Documents/STAT 359/data/stereograms.txt",
+stereograms<-read.table(file="~/Documents/uni/STAT359/data/stereograms.txt",
                          sep="",
                          header=TRUE)
 time.NV<-stereograms$fusion_time[stereograms$group=='NV']
@@ -210,7 +210,7 @@ boxplot(time.NV,time.VV,col='green',names=c('Time - NV','Time - VV'))
 title('Stereogram Fusion Times')
 
 qqnorm(time.NV,main='QQ-Plot: No/Verbal Information')
-qqnorm(time.VV,main='QQ-Plot: Verbal/Visual Information')
+
 ```
 Both plots have a bow-shape, meaning they're asymmetric with a longer right tail.
 

@@ -1,0 +1,1 @@
+Notes for this class are largely taken in R markdown, kept in the STAT359/class notes both in .Rmd for raw notes, and .html for readable notes.

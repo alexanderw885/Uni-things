@@ -1,0 +1,122 @@
+---
+title: "Set_6"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Paired Data: Parametric and Non-Parametric Methods
+
+```{r}
+smoking<-read.table(file ='~/Documents/uni/STAT359/data/smoking.txt', sep="",header=TRUE)
+library(knitr)
+kable(smoking, caption = 'Smoking Study Platelet Aggregation')
+
+```
+
+
+
+
+## Signed-Rank Test
+
+alternative to paired t-test, you can apply a nonparametric test which does not require any assumptions on the data. We want to derive test statistics based not on the data values, but on the ranks of the data values. Ranks being: given n data values, give each value a rank from 1-n.
+
+We take the values, and while before we assumed them to be normal, now we don't and we rank them based on their values
+
+```{r}
+smoking$D<-smoking$Before - smoking$After
+smoking$D.abs<-abs(smoking$D)
+smoking$Rank<-rank(smoking$D.abs)
+smoking$SignedR<- sign(smoking$D)*smoking$Rank
+kable(smoking)
+```
+
+Now we have signed ranks. the statistic is the number of ranks with positive signs. Here, we have only one positive rank, so $W_+=1$. $W_+$ is our test statistic to use going forwards.
+
+We compare this statistic to its distribution under the null hypothesis, that both sets are the same.
+
+under the null hypothesis, each of the $2^n$ assignments of signs to ranks is equally likely, with probability of $\frac{1}{2^n}$. 
+
+However, not all assignments of signs give unique test statistics, we need to tabulate the values and their associated probabilities to $k/2^n$, where $k$ is the number of different assignments that give the same statistic.
+
+We can derive $E[W_+]$, and $Var[W_+]$ under the null hypothesis
+
+we can write $W_+=\sum_{k=1}^nkI_k$, where $I_k$  is an indicator that the $k^{th}$ largest $|D_i|$ is assigned a  positive sign
+
+under the null hypothesis, we have:
+$I_k\sim{}Bernoulli(1/2)$ so that $E[I_k] = 1/2$ and $Var[I_k]=1/4$
+
+what does this all mean?
+
+it means that, under the null hypothesis, we can get the variance and expected values with the following expressions:
+$$E[W_+]=\frac{n(n+1)}{4}$$
+$$Var[W_+]=\frac{n(n+1)(2n+1)}{24}$$
+
+___
+
+# Example: Smoking, continued
+
+```{r}
+n <- nrow(smoking)
+
+E.W <- n*(n+1) / 4
+E.W
+var.W <- n*(n+1)*(2*n+1) / 24
+sqrt(var.W)
+```
+
+We observed a value of 1 for $W_+$, but we expected a value of 33 with a standard deviation of 11. This means that under the null hypothesis, $W_+=1$ is very unlikely.
+```{r}
+wilcox.test(smoking$Before, smoking$After, paired=TRUE)
+```
+
+The p-value is incredibly low, meaning the null hypothesis that the values before and after smoking are from the same distribution is extremely unlikely.
+
+___
+
+# Example: Mercury in Fish
+
+two methods of measuring mercury in fish. First method is selective reduction, the second is the permanganate method. used on 25 juvenile black marlin
+
+This data is paired, because each fish was measured with both methods. Each datapoint is one fish, so each value of reduction and permangante is paired to the other
+```{r}
+fish <- read.table(file='~/Documents/uni/STAT359/data/fish.txt',
+                   sep="",
+                   header=TRUE)
+kable(fish, caption = "Mercury study in Fish")
+summary(fish)
+
+# We won't use a boxplot to compare them, instead we'll plot the two methods against each other. This is because the data is paired, and a boxplot doesn't represent that
+plot(fish$Selective_Reduction,
+     fish$Permanganate,
+     xlab='Selective Reduction',
+     ylab="Permanganate")
+
+cor(fish$Selective_Reduction, fish$Permanganate)
+wilcox.test(fish$Selective_Reduction,fish$Permanganate,paired=TRUE)
+```
+
+There is a strong correlation between the two methods, which makes sense. If a fish has more mercury, both methods are likely to return a greater value.
+
+Since the p-value is 0.2242, there is no strong evidence that there's a difference in the two methods. Lets try another test
+
+```{r}
+t.test(fish$Selective_Reduction,fish$Permanganate,paired=TRUE)
+```
+
+While this test does not provide evidence against the null hypothesis, it does give slightly stronger evidence against it then the signed-rank test.
+
+Lets look at the differences.
+```{r}
+D <- fish$Selective_Reduction - fish$Permanganate
+qqnorm(D)
+```
+
+This distribution of the differences seems to be more non-normal in the lower values, but otherwise it appears normal. The left tail does make it unclear on if a t-test is appropriate in this sample.
+
+
+
+
