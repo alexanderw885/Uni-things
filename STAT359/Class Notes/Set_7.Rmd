@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
 ```
 # Mann-Whitney Test, a Nonparametric Two Sample Procedure
 
@@ -19,10 +20,29 @@ Under the null hypothesis that both samples are from the same distribution, it's
 each of the $_{m+n}C_m$ assignments of ranks to the $y$ sample is equally likely, with probability $(_{m+n}C_m)^{-1}$
 
 
+___
 
+# Example: Iron retention
 
+Determining if Fe2+ or Fe3+ are retained differently to see what makes a better dietary supplement
 
+```{r}
+iron <- read.table(file = '~/Documents/uni/STAT359/data/iron.txt',
+                   sep = "",
+                   header=TRUE)
+kable(iron)
+qqnorm(iron$Fe2)
+qqnorm(iron$Fe3)
 
+```
+
+both are bowed, appear non-normal, positively skewed. For the t-test, we applied a log transform first. Being normal doesn't matter for the Mann-Whitney test since we make no assumptions, so we do the test directly.
+
+```{r}
+wilcox.test(iron$Fe3, iron$Fe2, paired=FALSE)
+```
+
+with a p-value of 0.37, there is not enough evidence to say the different forms of iron are retained differently.
 
 
 

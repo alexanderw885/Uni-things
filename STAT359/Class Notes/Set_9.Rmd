@@ -1,0 +1,168 @@
+---
+title: "Set_9"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+# Anova for Factorial Experiments
+
+factorial experiments are very important, used everywhere
+
+in one-way ANOVA, what we were looking at, it's a way to compare means of J different samples with only one factor changing. what if the different sample populations are changing two or more factors?
+
+each combination of factor levels is a sample of $n$ measurements, $n$ maybe be referred to as the degree of replication
+
+our objective is to measure the response variable over these different factors and levels, and how the different factors might interact.
+
+___
+
+## Example: Farm animal diets
+
+two factors: diet and supplement, measuring weight after 6 weeks
+Diet: barley, oat, wheat
+Supplement: agrimore, control, supergain, supersupp
+
+```{r}
+weights <- read.table(file='~/Documents/uni/STAT359/data/growth.csv',
+                      header=TRUE, sep=",")
+attach(weights)
+names(weights)
+kable(weights)
+```
+
+this dataset has four measurements for each of the combinations. Lets create a matrix to show mean weight gain for each combination
+```{r}
+# apply mean to the vector gain, separately for each factor in the list
+mean.matrix <- tapply(gain,list(diet, supplement),mean)
+mean.matrix
+```
+
+each value in that matrix is the average of just four samples. Just eyeing it, looks like barley might have least wheat gain and barley has the most. Agrimore might have most weight gain, but it seems more irregular.
+
+lets plot this data
+
+```{r}
+barplot(mean.matrix, beside=TRUE,
+        xlab="Dark-Barley, Middle-Oats, Light-Wheat")
+title("Weight Gain by Diet and Supplement")
+
+# legend
+labels<-levels(diet)
+shade<-c(0.2,0.6,0.9)
+# legend(x=3.,y=26,labels,gray(shade),cex=0.7)
+```
+TODO TODO FIX THIS
+
+There's definitely a pattern with diet, barley always has most weight gain, followed by oats, and then wheat. Patterns with the supplement are a lot less clear. 
+
+we can fit an ANOVA that considers how the means vary. Symbolically 
+$$\text{Gain ~ Diet + Supplement}$$
+
+a more complex model takes into account how different factors respond to each other
+$$\text{Gain}\sim\text{Diet + Supplement + Diet x Supplement}$$
+
+this is a factorial model
+
+```{r}
+model<-aov(gain~diet*supplement)
+summary(model)
+```
+
+Note the F-value in diet:supplement. The null hypothesis is that diet has no effect on supplement, and supplement has no effect on diet. with such a high p-value, the null hypothesis is very likely, so there is no interaction between diet and supplement.
+
+Now, look at supplement. Null hypothesis is that supplement does not effect weight. absolutely tiny p-value, that's evidence against the null hypothesis. Supplement does play a role in wight gain.
+
+Same thing in the diet row, extremely small p-value so it does play a role in weight.
+
+We can also compute p-values by hand
+```{r}
+# pf(f-value, degrees of freedom)
+1-pf(83.52, 2, 36) # diet
+1-pf(17.82,3,36) # supplement
+1-pf(0.33,6,36) # diet:supplement
+```
+
+Since there's no interaction between diet and supplement, we can remove that from the model to get a more accurate result
+```{r}
+model2 <- aov(gain~diet+supplement)
+summary(model2)
+```
+
+With this more accurate model, it's even more confident that diet and supplement effect weight. Lets visualize this with error bars
+
+remember that error range is calculated with:
+$$LSD=t_{2(n-1),\alpha/2}\sqrt{2}\hat{\sigma}/\sqrt{n}$$
+Test level alpha, and the $\sqrt2$ is because it's based on standard error of difference between two means.
+
+### Aside: multiple testing error
+
+when testing multiple things, each one with an $\alpha$ chance of error, the chance of a type-1 error compounds. As we do more tests, the odds of a type-1 error increases at a rate of $1- (1-\alpha)^m$, given m tests, increasing exponentially. How do we deal with this?
+
+One way of controlling this is by setting alpha to control the probability of making at least one error over *all* the tests, so instead of using $\alpha$, we use $\alpha/m$. This means we run the tests with a much smaller alpha than usual, which can lead to a much more conservative result
+$$LSD=t_{2(n-1),\frac{\alpha}{2m}}\sqrt{2}\hat{\sigma}/\sqrt{n}$$
+Note the new degrees of freedom for the t-distribution that accounts for the number of tests to make.
+
+This is the simplest way to handle multiple error, but not necessarily the best.
+
+Since have $4*3=12$ different categories, the way to compare two bars is $_{12}C_2=66$, meaning $m=66$
+```{r}
+LSD<-qt(1-0.0004,6)*1.24/sqrt(2)
+LSD
+
+barplot(tapply(gain,list(diet,supplement),mean),beside=TRUE,xlab="Dark-Barley, Middle-Oats, Light-Wheat",ylim=c(0,33))
+title("Weight Gain by Diet and Supplement - Adjusted")
+x<-as.vector(barplot(tapply(gain,list(diet,supplement),mean),beside=TRUE,ylim=c(0,32),plot=F))
+y<-as.vector(tapply(gain,list(diet,supplement),mean))
+z<-rep(LSD/2,length(x))
+for (i in 1:length(x))
+{
+  arrows(x[i],y[i]-z[i],x[i],y[i]+z[i],length=0.05,code=3,angle=90)
+}
+```
+
+Very large error bars here. We could say, barley and wheat do not have the same impact on weight, but that's about it. We can't say that barley and oats are different, or oats and wheat are different.
+
+We can examine the estimated effect sizes and their standard error
+
+```{r}
+model<-lm(gain~diet+supplement)
+summary(model)
+```
+
+We can subtract their estimates to get their difference. Going by p-values, we can reject the null hypothesis for everything other than the supersupp supplement.
+
+since the effects of supergain and control seem the same, can we put those in one category? What about supersupp and agrimore?
+
+We can, but why do we want to? It should only be if it makes what you want to analyze more clear
+
+```{r}
+supp2<-factor(supplement)
+levels(supp2)
+levels(supp2)[c(1,4)]<-"best"
+levels(supp2)[c(2,3)]<-"worst"
+levels(supp2)
+```
+
+it's okay to do this, but be careful. Only do it if you expect it to have a result, don't do it blindly.
+
+Now we have a larger model RSS0 with $p$ parameters, and our new, simplified model RSS1 with $q$ parameters. We can get a test statistic:
+$$F=\frac{(RSS0-RSS1)/(p-q)}{RSS1/(n-q)}$$
+this gets us a value from the following F distribution:
+$$F_{p-q,n-q}$$
+Lets compare this new model with the original model
+```{r}
+model2<-lm(gain~diet+supp2)
+anova(model,model2)
+F.ratio<-((71.284 - 65.296)/2)/(65.296/42)
+F.ratio
+p.value<-1-pf(F.ratio,2,42)
+p.value
+```
+
+Here, we can see that the sub-model is just as good as the larger model. Still, this is not always the answer, be very careful doing this is the real world. Best only do it to better represent something you physically want to do in the real world

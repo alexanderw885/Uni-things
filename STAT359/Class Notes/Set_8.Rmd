@@ -1,0 +1,302 @@
+---
+title: "Set_8"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+# Analysis of Variance
+
+so far, we've always compared two populations, primarily based on the means. Now, we want to generalize to comparing the means of J populations, where $J\geq2$ 
+
+this procedure, the one-way analysis of variance (ANOVA), will be a generalization of the pooled t-test and equivalent when $J=2$
+
+we'll label each sample as $y_{ij}$, where i is the $i^{th}$ observation of the $j^{th}$ population
+
+Often times, the J different poplations will correspond to $J$ different levels of some factor that was changed for each sample
+
+Let's start by looking at an example with $J=2$
+
+___
+
+## Example: Atmospheric Ozone
+
+```{r}
+oneway <- read.table(file='~/Documents/uni/STAT359/data/oneway.txt',
+                     header=TRUE, sep="")
+kable(oneway)
+summary(oneway)
+attach(oneway)
+par(mfrow=c(2,2))
+hist(ozone)
+plot(1:20,ozone,ylim=c(0,8),ylab='Ozone',xlab='Obs. Number',pch=21,bg='red')
+boxplot(ozone[garden=='A'],ozone[garden=='B'],names=c('Garden A','Garden B'),col="green")
+plot(1:20,ozone,ylim=c(0,8),ylab='Ozone',xlab='Obs. Number',pch=21,bg='red')
+abline(h=mean(ozone),col="blue")
+for (i in 1:20)
+{
+  lines(c(i,i),c(mean(ozone),ozone[i]),col='green')
+}
+
+```
+
+The vertical lines in the fourth plot are the deviations of each observation from the mean
+$$SSY=\sum_{i=1}^n\sum_{j=1}^J(y_{ij}-\bar{y})^2$$
+this is the total variability in the data
+
+it's computed with $nJ$ observations and one parameter being the mean  c\bar{y}$, so the SSY has $nJ-1$ degrees of freedom
+
+Now, instead of measuring variance from the overall mean, lets look at the variance when you separate garden A an B
+
+```{r}
+plot(1:20,ozone,ylim=c(0,8),ylab='ozone',xlab='Obs. Number',pch=21,bg = as.numeric(garden))
+abline(h=mean(ozone[garden=="A"]))
+abline(h=mean(ozone[garden=="B"]),col="red")
+index<-1:length(ozone)
+for (i in 1:length(index))
+{
+  if (garden[i]=="A")
+  {
+    lines(c(index[i],index[i]),c(mean(ozone[garden=="A"]),ozone[i]))
+  }
+  else
+  {
+    lines(c(index[i],index[i]),c(mean(ozone[garden=="B"]),ozone[i]),col="red")
+  }
+}
+```
+
+This graph represents the SSE, the squared deviation of the garden-specific means
+
+$$SSE=\sum_{i=1}^n\sum_{j=1}^J(y_{ij}-\bar{y_j})^2$$
+
+The SSE is always less than or equal to the SSY, and only equal when both group means are identical.
+
+the SSE has $nJ-J$ degrees of freedom, as we estimated J parameters, the means of each population
+
+ANOVA separates SSY into tow components
+
+1. SSE, the measure of error variability around the mean of each group
+
+2. SSA, the variability explained by the differences in the means of each group, with $J-1$ degrees of freedom
+$$SSA=n\sum_{j=1}^J(\bar{y_j}-\bar{y})^2$$
+We say that $SSY = SSA+SSE$. This applies to both the values, and for the number of degrees of freedom
+```{r}
+SSY <- sum((ozone-mean(ozone))^2)
+SSY
+
+SSE <- sum((ozone[garden=="A"] - mean(ozone[garden=="A"]))^2) +
+      sum((ozone[garden=="B"] - mean(ozone[garden=="B"]))^2)
+SSE
+
+SSA <- SSY - SSE
+SSA
+```
+
+we can get the Mean Square values by dividing the values by their degrees of freedom
+$$MSE=\frac{SSE}{J(n-1)},MSA=\frac{SSA}{(J-1)}$$
+Now, we get the test statistic called the F-ratio, $F=MSA/MSE$. This is the variability of each mean compared to each other, divided by the variability of each sample from its group mean. A large F-ratio is evidence against the null hypothesis, it would be saying the variability of the group means is larger than the error of samples around each group mean
+
+Lets use the following model for the F-distribution
+$$Y_{ij}=\mu+\alpha_j+\epsilon_{ij}$$
+where:
+epsilon is *assumed* to be: $\epsilon_{ij}\sim{}N(0,\sigma^2)$
+
+$\alpha_j$ is associated with the $j^{th}$ population
+
+$\mu_j=\mu+\alpha_j$. This means $\alpha$ is the difference between the overall mean and the group mean
+
+Null hypotheses: all the $\mu$ are the same, or all the $\alpha$ are zero
+
+lets compute this for the ozone example
+```{r}
+J<-2
+n<-10
+MSA<-SSA/(J-1)
+MSE<-SSE/(J*(n-1))
+F.ratio<-MSA/MSE
+F.ratio
+
+p.val <- 1 - pf(F.ratio,J-1,J*(n-1))
+p.val
+```
+
+With such a small p-value, there is evidence that our two populations do not share the same mean.
+
+This is the same as a pooled t-test, since this only has two populations
+```{r}
+t.test(ozone[garden=="A"],ozone[garden=="B"],alternative="two.sided",var.equal=TRUE)
+```
+
+In R, we can use the `aov` function for ANOVA
+```{r}
+summary(aov(ozone~garden))
+```
+
+We did make two assumptions here, that the models are normal and have constant variance
+
+we can test these with the `resid` function
+```{r}
+resid.garden<-resid(aov(ozone~garden))
+boxplot(resid.garden[garden=='A'],resid.garden[garden=='B'],names=c('Garden A','Garden B'),col="green")
+qqnorm(resid.garden)
+qqline(resid.garden)
+```
+
+These variances do appear to be the same, and they do look normal, so this test should be valid for this sample. The qqplot has banding due to rounding, but it does appear normal
+
+
+Along with using ANOVA, we can learn more by examining effects (model parameters), as well as their standard errors
+
+```{r}
+summary.lm(aov(ozone~garden))
+```
+
+Notice that it's only estimating levels for garden B, not for A. This is because there's J+1 parameters, but we only have J samples. Therefore, we cannot uniquely solve all three parameters.
+
+We can't uniquely estimate $\mu$ and $\alpha_1,...,\alphpa_J$. We get around this by setting the mean for the first population, in this case garden A, as the intercept. garden A is our reference to let us estimate everything else
+
+The remaining $J-1$ parameters listed in the table correspond to the difference between that mean and the other relevant mean
+
+to demonstrate, we can manually calculate the means
+```{r}
+mean(ozone[garden=="A"])
+mean(ozone[garden=="B"] - ozone[garden=="A"])
+```
+We see that the mean of A is equal to the intercept above, and the difference between the means of B and A is the estimate for B, as shown in the summary above.
+
+___
+
+## Example: Plant Competition
+
+measuring biomass, experimenting with how much clipping. There's five levels of clipping: control, two types of shoot pruning, two types of root pruning
+
+```{r}
+comp<-read.table(file='~/Documents/uni/STAT359/data/competition.txt',
+                 header=TRUE,sep="")
+attach(comp)
+names(comp)
+kable(comp)
+
+#plot(clipping, biomass, xlab="Competition treatment", ylab = "Biomass", col="lightgrey") # DID NOT WORK
+boxplot(biomass[clipping=='control'],
+        biomass[clipping=='n25'],
+        biomass[clipping=='n50'],
+        biomass[clipping=='r5'],
+        biomass[clipping=='r10'],
+        xlab="Competition treatment",
+        ylab="Biomass",
+        names=c("control", "n25", "n50", "r5", "r10"))
+```
+
+We can see that the control has the least biomass. We can also look at a bar plot with error bars
+
+```{r}
+heights<-tapply(biomass,clipping,mean)
+barplot(heights, col="green", ylim=c(0,700),ylab="mean biomass", xlab = "competition treatment")
+```
+
+So far, it's just the means of each group. However, there's uncertainty for each group, and we don't know how many samples are in each group, so this bar plot doesn't have very much meaning.
+
+Here's a function to graph the heights and error bars, but we still need to calculate them first
+
+```{r}
+error.bars<-function(y,z){
+  # y is the list of heights
+  # z is a vector of the half-length of each error bar you want to plot
+  x<-barplot(y, plot=F)
+  n<-length(y)
+  for (i in 1:n)
+  {
+    arrows(x[i],y[i]-z[i],x[i],y[i]+z[i],code=3,angle=90,length=0.15)
+  }
+}
+```
+
+But how do we get the error in the first place? Lets start by looking at the ANOVA table
+
+```{r}
+summary(aov(biomass~clipping))
+sigma.hat<-summary.lm(aov(biomass~clipping))$sigma
+sigma.hat # our estimate of sigma, the standard error for each datapoint. Lets use it to get the error for each mean
+# the error is sigma/sqrt(n)
+se.mean<-sigma.hat/sqrt(6) # 6 data points in all 5 groups, so n=6. 
+se.mean
+```
+
+Now we can add the error bars
+
+```{r}
+barplot(heights, col="green", ylim=c(0,700),ylab="mean biomass", xlab = "competition treatment")
+bar.half.width<-rep(se.mean,5)
+error.bars(heights,bar.half.width)
+```
+
+A good thing to do with error bars to to look if they overlap.
+
+You can see that a lot of those error bars overlap, which shows there's a lot of uncertainty with these means. We can't say too much, but generally it appears the control has less biomass
+
+
+These error bars are all based on the standard error of the mean, but is that the best way to measure it? No, since we're comparing the means, we'd rather see the standard error of the differences between the means. Lets build them on confidence intervals on the errors between the means
+
+```{r}
+ci<-se.mean*qt(0.975,5)
+barplot(heights, col="green", ylim=c(0,700),ylab="mean biomass", xlab = "competition treatment")
+error.bars(heights,rep(ci,5))
+```
+
+These error bars are much larger, they all appear to overlap. However, we're being very conservative right now with uncertainty, we have a lot less precision than with ANOVA.
+
+
+If we look at the p-value we calculated with ANOVA a while ago, we see the p-value is very small, it's actually very unlikely the means are identical. We can reject that null hypothesis
+
+What does this tell us? It tells us that errors bars based on confidence intervals overlapping does not imply insufficient evidence to reject the null hypothesis.
+
+Is there a third way to make error bars?
+
+The best way to measure uncertainty is the least significant difference (LSD). It's the smallest difference between the means that would lead to rejection of the null hypothesis.
+
+First, run ANOVA. Then, run t-tests for each pair of populations
+```{r}
+LSD<-2*sqrt(2)*se.mean
+LSD.bars<-rep(LSD,5)/2 #divide by two to get the half-width
+barplot(heights, col="green", ylim=c(0,700),ylab="mean biomass", xlab = "competition treatment")
+error.bars(heights,LSD.bars)
+```
+
+With this, if we look at any pair of error bars and they overlap, we wouldn't reject the null hypothesis for those two groups.
+
+We can say now that clipping does increase biomass, but we do not have evidence that the type of clipping makes a difference.
+
+### Recap
+
+three methods for error bars:
+
+1. Standard error of the mean
+
+2. Confidence intervals for each mean
+
+3. Standard error for the differences of each mean, the best one
+
+
+Lets look at ANOVA residuals with more detail
+```{r}
+resid.plant<-resid(aov(biomass~clipping))
+boxplot(resid.plant[clipping=="control"],resid.plant[clipping=="n25"],
+resid.plant[clipping=="n50"],resid.plant[clipping=="r10"],
+resid.plant[clipping=="r5"],
+names=c('control','n25','n50','r10','r5'),
+col="green")
+qqnorm(resid.plant)
+qqline(resid.plant)
+```
+
+
+
+
+

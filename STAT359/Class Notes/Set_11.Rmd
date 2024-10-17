@@ -1,0 +1,186 @@
+---
+title: "Set_11"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+# Regression with a Single Predictor
+
+Consider the case where the data has a continuous response $Y$, and a continuous variable $X$. We want to examine the relationship between $X$ and  $Y$, or determine if there is one.
+
+the data is in the form $(y_1,x_1),...,(y_n,x_n)$. X and Y might both be observed, or we might observe Y with chosen values X
+
+we will examine data of the form:
+$$y_i=f(x_i)+\epsilon_i, \epsilon_i\sin{}N(0,1)$$
+$f(x)$ is the relationship between X and Y, that we want to find out.
+
+What assumptions are we making? we're assuming the error for each point $\epsilon_i$ is normally distributed, always with the same variance.
+
+we can fit a model to get the observed value $\hat{f}(x)$
+
+there's a number of forms that $f(x)$ might take
+1. $f(x)=ax+b$         linear regression
+2. $f(x)=ax^2+bx+c$    quadratic regression, or polynomial regression
+3. $f(x)=a-be^{-cx}$   non-linear
+4. no assumptions on $f(x)$, only that it's smooth
+
+lets start with linear regression
+
+___
+
+## Example: Growth and Tannin
+
+X is measure of tannin, Y is measure of growth
+
+```{r}
+reg.data <- read.table(file='~/Documents/uni/STAT359/data/tannin.txt'
+                       ,header=TRUE,sep="")
+attach(reg.data)
+names(reg.data)
+plot(tannin,growth,pch=16)
+```
+Looks like there's a negative correlation between growth and tannin.
+
+How do we estimate our parameters a and b? Lets start with a rough guess
+```{r}
+plot(tannin,growth,pch=16)
+## rough guess at parameter values
+## intercept
+a<-12
+## slope
+b<-(growth[9]-growth[1])/(tannin[9]-tannin[1])
+## plot the guessed linear relationship
+lines(tannin,a+b*tannin,lty=2)
+```
+
+This was just a guess, how can we do this to get an optimal set of parameters?
+
+First, let's try the least squares (LS) method
+```{r}
+plot(tannin,growth,pch=16)
+## rough guess at parameter values
+## intercept
+a<-12
+## slope
+b<-(growth[9]-growth[1])/(tannin[9]-tannin[1])
+
+## plot the guessed linear relationship
+lines(tannin,a+b*tannin,lty=2)
+## plot the errors
+simple.fit<-a+b*tannin
+for (i in 1:length(growth))
+    {
+    lines(c(tannin[i],tannin[i]),c(simple.fit[i],growth[i]))
+    }
+```
+
+Those vertical lines are the distances from the estimate, they're the error in this model. You square and sum them together
+$$SSE=\sum_{i=1}^n(y_i-\hat{f}(x))^2$$
+We want to pick $\hat{a},\hat{b}$ to minimize this value. We take the derivative of the equation, set that equal  to zero, and search for the minimum. Calculus 3 math
+
+we eventually get the following equations:
+$$\hat{b}=\frac{\sum{}x_iy_i-\frac{1}{n}(\sum{}y_i)(\sum{}x_i)}{\sum{}x_i^2-\frac{(\sum{}x_i)^2}{n}}$$
+$$\hat{a}=\bar{y}-\hat{b}\bar{x}$$
+
+```{r}
+## compute least squares estimators
+## change notation to match the notes
+y<-growth
+x<-tannin
+
+b.ls<-(sum(x*y) - sum(y)*sum(x)/length(y))/(sum(x^2) - sum(x)*sum(x)/length(x))
+a.ls<-mean(y) - b.ls*mean(x)
+
+## plot the least squares line
+plot(tannin,growth,pch=16)
+## plot the guessed linear relationship
+lines(tannin,a+b*tannin,lty=2)
+## plot the LS line
+lines(tannin,a.ls+b.ls*tannin,lty=2,col="red")
+
+lm(growth~tannin)
+```
+
+we also want a confidence interval for hypothesis testing, we'll need some more values $SSX, SSY, SSXY$$ just like with ANOVA testing
+
+$$SSY=\sum{}y_i^2-\frac{(\sum{}y_i)^2}{n}$$
+$$SSX=\sum{}x_i^2-\frac{(\sum{}x_i)^2}{n}$$
+Recall SSE from ANOVA, how it was used to derive a,b, we can use that again to get SSR
+$$SSR=SSY-SSE$$
+
+we use these measures of variation for hypothesis testing
+```{r}
+anova(lm(growth~tannin))
+```
+The p-value is very strong, so we have evidence against the null hypothesis that growth and tannin are unrelated.
+
+We can also compute the p-value manually
+
+```{r}
+## error sum of squares
+SSE<-sum((y-a.ls-b.ls*x)^2)
+## total sum of squares
+SSY<-sum(y^2) - (sum(y)^2)/length(y)
+## regression SS
+SSR<-SSY-SSE
+
+##########################################3
+## compute the p-value for F-test
+F.ratio<-(SSR/1)/(SSE/7)
+1-pf(F.ratio,1,7)
+```
+
+Here's how we can easily plot the line of best fit
+```{r}
+## plot the least squares line
+plot(tannin,growth,pch=16)
+## plot the LS line
+abline(lm(growth~tannin),col='red')
+lm(growth~tannin) 
+```
+
+Now, we want to get a confidence interval for the slope b
+
+first, we get the standard error of $\hat{b}$
+```{r}
+summary(lm(growth~tannin))
+```
+
+our standard error of $\hat{b}$ is 0.2186, we can use the equation:
+$$\hat{b}\pm{}t_{n-2,0.025}\times{}SE(\hat{b})$$
+```{r}
+## confidence intervals 
+y<-growth
+x<-tannin
+b.ls<-(sum(x*y) - sum(y)*sum(x)/length(y))/(sum(x^2) - sum(x)*sum(x)/length(x))
+a.ls<-mean(y) - b.ls*mean(x)
+## want a 95% confidence interval for b
+lower.b<-b.ls-0.2186*qt(p=0.975,df=length(y)-2) 
+upper.b<-b.ls+0.2186*qt(p=0.975,df=length(y)-2) 
+CI.b<-c(lower.b,upper.b)
+CI.b
+```
+
+We can do it all at once with the confint function
+```{r}
+confint(lm(growth~tannin))
+```
+
+We've done everything under the assumption that this was a reasonable model to choose, how can we check that?
+
+
+
+
+
+
+
+
+
+
+

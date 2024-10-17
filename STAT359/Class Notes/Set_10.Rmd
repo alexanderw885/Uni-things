@@ -1,0 +1,102 @@
+---
+title: "Set_10"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+# Contingency Tables
+
+So far we've been looking at data from continuous measurements. Contingency tables are for comparing discrete values, things like yes/no answers, or where there's only a handful of possible values.
+
+___
+
+## Example: Demographic Study in BC
+
+a random sample of 1436 women over 30 who were married at least once
+```{r}
+demog<-matrix(c(550,681,61,144),nrow=2,ncol=2,
+              dimnames=list(c("College","No College"),
+                            c("Married Once","    Married > 1")
+                            ))
+
+demog
+colSums(demog)
+rowSums((demog))
+```
+
+Is there any association between marital status and education?
+
+This is a $2\times2$ contingency table, two factors with two levels. We can use a chi-squared test to answer this question
+
+$$\chi^2=\sum_{i=1}^r\sum_{j=1}^c\frac{(O_{ij}-E_{ij)^2}}{E_{ij}}$$
+**Important:** all values in the table must be greater than 5, otherwise another test needs to be used.
+
+Where $O_{ij}$ is what you observe, and $E_{ij}$ is the expected number assuming independence. In our case, $O_{12}$ is first row, second column, married with no college. Our expected value is from the following equation:
+$$E_{ij}=\frac{N_{i*}N_{*j}}{N}$$
+Lets look at the table of the expected values
+```{r}
+chisq.test(demog,correct=FALSE)$expected
+```
+
+We sum everything together in the equation shown earlier, and we get $\chi^2=16$, in the distribution 
+$$\chi^2_{(r-1)(c-1)}=\chi^2_{1}$$
+```{r}
+chisq.test(demog, correct=FALSE)
+```
+What is that `correct=FALSE`? this test is only an approximation, it gets more accurate as we get more datapoints. We can apply this correction to account for this.
+```{r}
+chisq.test(demog)
+```
+
+With such small p-values, we have evidence to reject the null hypothesis of no correlation between marriages and education. Let's look at the actual and expected values again
+```{r}
+demog
+chisq.test(demog,correct=FALSE)$expected
+```
+
+We see less with a College education married only once, and less people married multiple times with no college education
+
+___
+
+## Example: Diet and Prostate Cancer
+
+6272 Swedish men followed for 30 years to see if there's an association between fish in their diet and prostate cancer.
+```{r}
+fish <- read.table(file='~/Documents/uni/STAT359/data/fish_diet.txt',
+                   header=TRUE,sep="")
+attach(fish)
+names(fish)
+table(fish)
+```
+We have the data, but we need to save it as the table in order to do the test.
+
+For this example, we won't use the correction even though that gets us a lightly less accurate result.
+
+```{r}
+fish.table <- as.matrix(table(fish))
+chisq.test(fish.table, correct=FALSE)
+```
+
+the p-value is 0.2985, there's no evidence that the amount of fish in your diet affects your chance of getting cancer.
+
+Just for fun, let's compare the observed table and the expected table.
+```{r}
+fish.table
+chisq.test(fish.table,correct=FALSE)$expected
+```
+You can visible see that for the most part, expected and observed values are very close to each other.
+
+
+
+
+
+
+
+
+

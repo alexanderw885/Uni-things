@@ -106,7 +106,7 @@ t.test(methodA,
        var.equal=FALSE)
 ```
 
-while the p-value is larger, it's still very unlikely that both distributions have the same mean. We have less confidence, but the p-value is still veyr small
+while the p-value is larger, it's still very unlikely that both distributions have the same mean. We have less confidence, but the p-value is still very small
 
 ___
 
