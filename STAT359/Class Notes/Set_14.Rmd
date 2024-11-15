@@ -1,0 +1,131 @@
+---
+title: "Set_14"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Multiple Regression
+
+Now, we have multiple variables that we believe might influence $Y$.
+$$Y_i=\beta_0+\beta_1x_{1i}+....+\beta_2x_{2i}+\epsilon_i$$
+where $\epsilon_i\sim{}N(0,\sigma^2)$
+
+why use multiple regression?
+
+- it builds better models
+
+- associations between multiple variables are accounted for
+
+- it lets us look at interactions between variables
+
+___
+
+## link between storks and babies
+
+data on birth rate and number of storks in 17 countries
+
+```{r}
+# Birth rate, thousands per year
+birth<-c(83,87,118,117,59,774,901,106,188,124,551,610,120,367,439,82,1576)
+## number stork pairs
+storks<-c(100,300,1,5000,9,140,3300,2500,4,5000,5,30000,1500,5000,8000,150,25000)
+stork.data<-data.frame(birth=birth,storks=storks)
+library(knitr)
+kable(stork.data, caption = 'Study of Storks and Babies',align='l')
+
+plot(storks,birth,ylab='Birth Rate', xlab = 'Number Stork Pairs')
+title('Storks and Birth Rate')
+```
+Lets fit this simple with a simple linear model
+```{r}
+plot(storks,birth,ylab='Birth Rate', xlab = 'Number Stork Pairs')
+title('Storks and Birth Rate')
+model.simple<-lm(birth~storks)
+abline(model.simple)
+summary(model.simple)
+```
+the $r^2$ is low, but with the low p-value this result is significant. 38% of variance in birth rate is explained by the number of storks.
+
+But what if there's a third variable, one that influences both birth rate and storks? We also have area and population.
+
+```{r}
+## consider two additional factors in the analysis
+## area km^2
+area<-c(28750,83860,30520,111000,43100,544000,357000,132000,41900,93000,301280,312680,92390,237500,504750,41290,779450)
+## human population (10^6)millions
+pop<-c(3.2,7.6,9.9,9.0,5.1,56,78,10,15,11,57,38,10,23,39,6.7,56)
+stork.data<-data.frame(birth=birth,storks=storks,area=area,pop=pop)
+pairs(stork.data)
+```
+Storks and birth both seem to have positive correlation to population, maybe that's the relationship between the two? More populations would lead to more births, and create more garbage for storks. Lets make a model to test this
+
+```{r}
+model.multiple<-lm(birth~storks+pop+area)
+summary(model.multiple)
+```
+population and area seem somewhat significant, but storks do not appear to influence birth rate. We're now explaining 90% of the variance, so this model fits much better. Lets look at the confidence intervals
+
+```{r}
+confint(model.multiple)
+```
+the confidence interval for storks includes 0, so we have no evidence that storks effect birth rate. We can remove this from the model. Now we would have the following model for our data:
+$$Birth = \beta_0+\beta_1pop+\beta_2area+\epsilon_i$$
+
+What if the variables have some interaction with each other? Then, our model might be better represented with the model:
+$$Birth = \beta_0+\beta_1pop+\beta_2area+\beta_3(pop*area)+\epsilon_i$$
+Lets test both of these models and compare them
+```{r}
+model.multiple2<-lm(birth~pop+area)
+
+model.multiple.int <- lm(birth~pop * area)
+anova(model.multiple2,model.multiple.int)
+summary(model.multiple.int)
+```
+Here, it appears that this non-linear term does improve the model, and  $r^2$ is significantly higher.
+
+What are the  c\beta$ values?
+```{r}
+coef(model.multiple.int)
+```
+
+we can graph this as well
+```{r}
+## Set range and domain of plot
+x  <- seq(min(pop),
+          max(pop), 
+          length.out = 50);
+y  <- seq(min(area), 
+          max(area), 
+          length.out = 50);
+
+## Interpolate surface
+z  <- outer(x,
+            y,
+            function(x,y){predict(model.multiple.int, data.frame(pop=x, area=y))});
+            # This third argument is a function, we're defining it in this call.
+
+p  <- persp(x, 
+            y,
+            z,
+            theta = 30, # used to choose viewing angle
+            phi = 30,   # used to choose viewing angle
+            col = "lightblue", 
+            shade = 0.8, 
+            ticktype = "detailed",
+            xlab = 'x', 
+            ylab = 'y',
+            zlab = 'z')
+title('Fitted Birth Rate (z), Population (x), Area (y)')
+```
+
+
+
+
+
+
+

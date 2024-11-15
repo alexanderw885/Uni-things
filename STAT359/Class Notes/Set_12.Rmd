@@ -1,0 +1,120 @@
+---
+title: "Set_12"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Polynomial Regression
+
+a generalization from the linear model
+
+## Example: Radioactive emissions
+
+relation between time (x) and emissions (y)
+
+```{r}
+curve<-read.table(file ='~/Documents/uni/STAT359/data/decay.txt',header=TRUE,sep="")
+attach(curve)
+names(curve)
+summary(curve)
+plot(x,y)
+abline(lm(y~x))
+summary(lm(y~x))
+```
+
+$r^2=0.7688$, which is a bit low. We can try to improve this by adding a non-linear term.
+
+```{r}
+x2<-x^2
+quadratic<-lm(y~x+x2)
+
+plot(x,y)
+xv<-seq(0,30,.1)
+## plot the line
+linear<-lm(y~x)
+yv.linear<-predict(linear,list(x=xv))
+lines(xv,yv.linear)
+## plot the quadratic model
+yv.quadratic<-predict(quadratic,list(x=xv,x2=xv^2))
+lines(xv,yv.quadratic,col="red")
+summary(quadratic)
+```
+
+ $r^2$ went up to 0.9, that's a large improvement. the p-values are also very small, so we have evidence that time does effect radioactive emissions.
+
+lets compare the two models with anova
+```{r}
+anova(quadratic,linear)
+```
+
+we can also use anova to compare multiple models at once
+```{r}
+## compare a sequence of four nested models
+constant<-lm(y~1) 
+linear<-lm(y~x)
+x3<-x^3
+cubic<-lm(y~x+x2+x3)
+## compare 4 nested models
+## the F-statistic provides pairwise comparison of models
+## numerator = difference in RSS/difference in DF
+## denominator = RSS of largest model/DF
+anova(constant,linear,quadratic,cubic)
+```
+Anova compares in sequence, only compares each model to the one next to it.
+
+model one is constant, not very good.
+
+model 2 compared to model one, the linear model 2 is better.
+
+model 3 is compared to model 2, the quadratic model is better.
+
+model 4 is compared to model 3, and the p-value is high. quadratic is still better
+
+The quadratic model is the best of all, there's no evidence to reject it over the cubic model.
+
+
+Lets graph these models
+```{r}
+plot(x,y)
+xv<-seq(0,30,.1) #xv is sample data just used to visualize the line
+## plot the line
+linear<-lm(y~x)
+yv.linear<-predict(linear,list(x=xv))
+lines(xv,yv.linear)
+## plot the quadratic model
+yv.quadratic<-predict(quadratic,list(x=xv,x2=xv^2))
+lines(xv,yv.quadratic,col="red")
+
+exponential<-lm(log(y)~x)
+## make predictions on the log scale and exponentiate
+yv.exp<-exp(predict(exponential,list(x=xv)))
+lines(xv,yv.exp,col="blue")
+
+legend(x=20,y=100,legend=c("linear","quadratic","exp"),fill=c("black","red","blue"))
+
+```
+One concern with the quadratic model is that it's going up near the end of the datapoints. We know for this case that radiation doesn't increase over time, so this is due to noise. How can we prevent this and make the line more accurate to the science of decay?
+
+That's what the exponential model is for, it might fit the data better. We're just fitting a linear model to the log of y
+```{r}
+summary(exponential)
+```
+Notice that the $r^2$ went down, the exponential model accounts for less variability than the quadratic model. We might be willing to accept this because we know this data is from exponential decay, or we might say it's hard to compare the $r^2$ values since this model was trained on $log(y)$ instead of $y$.
+
+
+
+
+
+
+
+
+
+
+
+
+

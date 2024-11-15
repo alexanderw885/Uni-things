@@ -174,11 +174,70 @@ confint(lm(growth~tannin))
 
 We've done everything under the assumption that this was a reasonable model to choose, how can we check that?
 
+To check the fit of a linear model, we consider the proportion of variation in $Y$ that's explained by the regression. We do this by finding the coefficient of determination $r^2$:
+$$r^2=\frac{SSR}{SSY}$$
+$r^2$ as a value between 0 and 1, where 1 is a perfect fit and 0 if the line does not explain anything. the value of $r^2$ is the percent of variation that the model can explain.
 
+We can find it with the `summary` function
+```{r}
+summary(lm(growth~tannin))
+```
+At the bottom, we see our $r^2=0.8157$, so this model explains $81%$ of the variability.
 
+Watch out though, r^2 will always increase as you add more terms, but will not warn you about overfitting. We also need to consider the assumptions in our model, and examine the data to make sure there's no violations of these assumptions.
 
+we define the residuals, the estimates of our errors, as $\hat{\epsilon}_i, 1\leq{}i\leq{}n}$
+$$\hat{\epsilon}_i=y_i-\hat{a}-\hat{b}x_i$$
+we plot the residuals against the fitted values to examine if the variance is constant. It shouldn't increase or decrease as we move along the line of best fit. In reality, it won't be a constant line, but there shouldn't be a pattern to it, where variance increases as the mean(line of best fit) gets higher
 
+Lets graph the error
+```{r}
+model<-lm(growth~tannin)
+plot(model,which=c(1))
+```
+R plots us for it as this red line. It stays close to zero, there's no obvious increase of variance as the mean changes, it's safe to say that the linear model fits.
 
+If the error looks like a quadratic or a sine wave, that's a good sign that you should include one in your equation.
+
+A common problem is non-common variance, specifically a megaphone shape where the variance exponentially increases as the mean increases. We can use a log-transformation to adjust for this.
+$$log(y_i)=a+bx_i+\epsilon_i$$
+remember that with this we're no longer predicting  $y$, but the log of $y$. It's important to note this when working with data, in some contexts this can cause problems.
+
+we can use a QQ plot to examine the assumption of normality.
+```{r}
+plot(model,which=c(2)) # which=c(2) gives the qq-plot
+```
+What do we do if it doesn't look normal? We can either use a more complicated regression model, which might be more difficult to work with, or we could use a transformation on $Y$. Transformations can be easier to work with, but may cause problems in some contexts. Once the transform is applied, fit the linear regression again, and check for normality.
+
+Another measure to check the model is the Cook's distance. it's a measure on how much each point $y_i$ influences the model parameters. If you see that one point has a huge influence on the mean compared to all other points, it might be worth seeing how the result changes if you remove it.
+```{r}
+plot(model,which=c(4)) # c(4) is the Cook's distance
+```
+We see that the 7th point has the largest influence, but it's not much more than the 4th or 9th. 
+```{r}
+model<-lm(growth~tannin)
+cbind(tannin,growth)
+```
+this 7th observation is (6,2). Lets see what happens if we remove it.
+```{r}
+model2<-update(model,subset=(tannin !=6))
+print("Original Model")
+summary(model)
+print("New model")
+summary(model2)
+```
+If we see that removing a point causes a large difference, if you remove it you **must** specify that in the report.
+
+In this example, there does appear to be a linear relationship between tannin concentration in the diet and growth. Lets look at all the plots together.
+
+```{r}
+par(mfrow=c(2,2)) #split plotting area into 2x2 matrix
+plot(tannin,growth,pch=16)
+title("Fitted Regression Line")
+## plot the LS line
+abline(lm(growth~tannin),col='red')
+plot(model,which=c(1,2,4)) 
+```
 
 
 

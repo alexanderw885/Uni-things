@@ -1,0 +1,145 @@
+---
+title: "Set_19 Bioassay"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+Bioassay is to measure LD50, point of lethal dose 50% of time. More generally, we want to find the point where 50% of the time, that dose will get a response.
+
+we have dose values, and probability of response. Can we find curve that relates them? There's only one variable, but we need to find the best link function. Once we have the best link function, we need the confidence interval on where the LD50 is
+
+```{r}
+## Log Dose CS2
+dose<-c(1.6907, 1.7242,1.7552,1.7842,1.8113,1.8369,1.8610,1.8839)
+## the number of insects killed
+y<-c(6,13,18,28,52,53,61,60)
+## the number of insects total
+m<-c(59,60,62,56,63,59,62,60)
+bioassay<-data.frame(dose=dose,y=y,m=m,prop=round(y/m,2))
+kable(bioassay, caption = 'Dose-Response for Beetles exposed to CS2',align='l')
+```
+
+Y is the number that responded, M is sample size.
+
+Here's we'll try using the logit link
+```{r}
+bioassay$resp<-cbind(bioassay$y,bioassay$m-bioassay$y)
+model1<-glm(resp~dose,family=binomial(link=logit),data=bioassay)
+summary(model1)
+
+# extract the residuals and fitted values to make diagnostic plots
+rd1<-residuals.glm(model1,"deviance")
+fv1<-model1$fitted.values
+```
+
+Clearly, dose does have a significant effect on survival rate, with an estimated coefficient of 34.270
+
+Does it fit? residual deviance of 11.232 on 6 df, it's an alright fit but could be better. Lets try the probit link, the inverse of the normal CDF function
+
+```{r}
+model2<-glm(resp~dose,family=binomial(link=probit),data=bioassay)
+summary(model2)
+# extract the residuals and fitted values to make diagnostic plots
+rd2<-residuals.glm(model2,"deviance")
+fv2<-model2$fitted.values
+```
+
+
+and with the third link, complimentary log-log
+
+```{r}
+model3<-glm(resp~dose,family=binomial(link=cloglog),data=bioassay)
+summary(model3)
+# extract the residuals and fitted values to make diagnostic plots
+rd3<-residuals.glm(model3,"deviance")
+fv3<-model3$fitted.values
+```
+
+Now, we can plot all of our residuals. in a series of graphs
+
+```{r}
+# now plot the deviance residuals by dose and fitted values
+par(mfrow=c(3,2))
+plot(bioassay$dose,rd1,ylim=c(-5,5),xlab="DOSE",ylab="DEVIANCE RESIDUALS")
+abline(h=-2)
+abline(h=2)
+title('Model 1 - logit Link')
+
+plot(fv1,rd1,ylim=c(-5,5),xlab="FITTED VALUES",ylab="DEVIANCE RESIDUALS")
+abline(h=-2)
+abline(h=2)
+title('Model 1 - logit Link')
+
+
+plot(bioassay$dose,rd2,ylim=c(-5,5),xlab="DOSE",ylab="DEVIANCE RESIDUALS")
+abline(h=-2)
+abline(h=2)
+title('Model 2 - Probit Link')
+
+plot(fv2,rd2,ylim=c(-5,5),xlab="FITTED VALUES",ylab="DEVIANCE RESIDUALS")
+abline(h=-2)
+abline(h=2)
+title('Model 2 - Probit Link')
+
+plot(bioassay$dose,rd3,ylim=c(-5,5),xlab="DOSE",ylab="DEVIANCE RESIDUALS")
+abline(h=-2)
+abline(h=2)
+title('Model 2 - log-log Link')
+
+plot(fv3,rd3,ylim=c(-5,5),xlab="FITTED VALUES",ylab="DEVIANCE RESIDUALS")
+abline(h=-2)
+abline(h=2)
+title('Model 2 - log-log Link')
+```
+
+All the residuals seem good, though they do all seem to have a dip in the same place. complimentary log-log has the least dip. They all look reasonable, though log-log does look the best. Lets try plotting the fitted models with the real data.
+
+```{r}
+plot(bioassay$dose,bioassay$y/bioassay$m,xlim=c(1.65,1.95), ylim=c(0,1),xlab='DOSE',ylab='PROBABILITY OF DEATH')
+
+# create points to put into equation to make the line
+x<-seq(1.65,1.95,by=0.001)
+prob<-as.vector(rep(1,301))
+
+beta<-as.vector(model1$coefficients) #extracting the coefficients
+prob<-exp(beta[1]+beta[2]*x)/(1+exp(beta[1]+beta[2]*x)) # multiply created points by coefficients to get probability 
+lines(x,prob,lty=2)
+
+beta<-as.vector(model2$coefficients)
+prob<-pnorm(beta[1]+beta[2]*x)
+lines(x,prob,lty=5)
+
+beta<-as.vector(model3$coefficients)
+prob<-1-exp(-exp(beta[1]+beta[2]*x))
+lines(x,prob,lty=1)
+
+legend(x=1.65,y=0.8,c("LOGIT","PROBIT","CLOGLOG"),lty=c(2,5,1))
+```
+
+All of them do look quite similar, though the C-log-log function does fit better in the center around 1.75-1.8, where that dip was in the residuals. This means we can write the model as:
+$$log(-log(1-\pi_i))=\beta_0+\beta_1DOSE_i$$
+to get the LD50, we substitute in $\pi=0.5$, and solve for dose,
+$$DOSE=LD_{50}=\frac{log(-log(1-0.5))-\beta_0}{\beta_1}$$
+
+Now lets get our confidence interval:
+
+```{r}
+beta<-as.vector(model3$coefficients)
+V<-vcov(model3)
+gradf<-c(-1/beta[2],(-log(-log(0.5))+beta[1])/(beta[2]^2))
+SE.XLD50<-sqrt(t(gradf)%*%V%*%gradf)
+XLD50<-(log(-log(0.5))-beta[1])/(beta[2])
+XLD50
+XLD50.CI<-c(XLD50-1.96*SE.XLD50,XLD50+1.96*SE.XLD50)
+XLD50.CI
+```
+
+
+
+

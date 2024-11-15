@@ -60,7 +60,7 @@ the period in the names is the convention in R
 code to remove null values
 `Placebo<-Placebo[!is.na(Placebo)]`
 # Stats things
-use [mean or median](Mean,%20Median,%20Mode)?
+use [mean or median](Mean,%20Median,%20Mode.md)?
 median can do much better at filtering outliers
 if we generate a distribution 
 `y<-rnorm(n=20,    plt.show()

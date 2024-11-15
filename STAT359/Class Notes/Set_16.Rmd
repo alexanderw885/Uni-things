@@ -1,0 +1,67 @@
+---
+title: "Set_16"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Review of Likelihood Methods
+
+suppose random variable $Y$ has probability density function $f(y;\theta)$ where $\theta$ is an unknown parameter we wish to make inferences about. 
+
+we define a likelihood function $L(\theta;y)=cf(y|\theta)$, it's a function that is proportional to the probability of observing the data obtained. 
+
+this function $L$ contains all the information about $\theta$ in the data. Our goal is to find a value for $\theta$ that maximizes the value of $L$.
+
+Often, it's easier to work with $log(L(\theta;y))$, which we shorten to $l(\theta;y)$. the value that maximizes $l$ is the same one that maximizes $L$, and this value is called the maximum likelihood estimator $\hat\theta$.
+
+From now on, we'll drop $y$ from the likelihood function, and write them as just a function of $\theta$. We'll also assume that $\hat\theta$ does exist, and it's a single point in the parameter space. there's only one ideal value, and it exists inside the space of valid points.
+
+$l(\theta)=log(L(\theta))$: log-likelihood function
+$S(\theta)=l'(\theta)$: score function. We want to solve $S(\theta)=0$
+$I(\theta)=-l''(\theta)$: information function
+
+### Newton Raphson Algorithm
+
+suppose $\theta_0$ is an initial guess to $S(\theta)=0$. We take the tangent line on that point in $S(\theta)$, and move $\theta$ in the direction with the greatest negative slope. it's gradient descent.
+
+We do this by considering the first order Taylor expansion of $S(\theta_)$ about $\theta_0$.
+
+eventually we get the equation:
+$$\theta_{i+1}=\theta_i+I^{-1}(\theta_i)S(\theta_i)$$
+We iterate through this, though there's no guarantee it converges. We want as good an initial guess to help give us a greater chance.
+
+we have $\hat\theta$, but we want confidence testing. There's three pivotal quantities to test the estimate. A pivotal quantity is used for confidence intervals or hypothesis tests.
+
+1. likelihood ratio pivotal: $-2(l(\theta)-l(\hat\theta))\sim\chi^2_{(1)}$
+
+2. score pivotal: $(S(\theta))^2/I(\theta)\sim\chi^2_{(1)}$ (not used in this course, used in cases where $\hat\theta$ is hard to obtain)
+
+3. Wald pivotal: $(\hat\theta-\theta)^2I(\hat\theta)\sim\chi^2_{(1)}$
+
+These are just like $(\text{estimate-parameters})/\text{ESE}$ from tests earlier in this course. We find the probability of the calculated values in the $\chi^2_{(1)}$ to get the probability of a result at least this extreme.
+
+One note, while the earlier tests returned "test statistics", this is called a "pivotal quantity" because it depends on a parameter.
+
+Note that we don't know the true $\theta$ for these equations, so those our our hypothesis.
+
+$H_0:\theta=\hat\theta$
+
+$H_1:\theta\neq\hat\theta$
+
+for the likelihood test, we need to invert the pivotal quantity. This just means we see how likely our test statistic is.:
+
+1. the likelihood ratio
+$$Pr(X>-2(l(\theta)-l(\theta_{obs}))), X\sim\chi^2_{(1)}$$
+2. the Wald test:
+$$Pr(X>(\theta_{obs}-\theta)^2I(\theta_{obs})), X\sim\chi^2_{(1)}$$
+Note that $\hat\theta$ is the same as $\theta_{obs}$, I switched to make the connection clearer to earlier pivotal testing.
+
+
+
+
+

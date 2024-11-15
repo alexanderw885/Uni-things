@@ -115,13 +115,13 @@
       <a name="label" val="F0"/>
       <a name="output" val="true"/>
     </comp>
-    <comp lib="0" loc="(960,450)" name="Pin">
+    <comp lib="0" loc="(960,440)" name="Pin">
       <a name="appearance" val="NewPins"/>
       <a name="facing" val="west"/>
       <a name="label" val="C"/>
       <a name="output" val="true"/>
     </comp>
-    <comp loc="(720,300)" name="Half_Adder"/>
+    <comp loc="(720,280)" name="Full_Adder"/>
     <comp loc="(720,380)" name="Full_Adder"/>
     <comp loc="(720,480)" name="Full_Adder"/>
     <comp loc="(720,580)" name="Full_Adder"/>
@@ -139,41 +139,46 @@
     <wire from="(390,500)" to="(500,500)"/>
     <wire from="(400,260)" to="(400,400)"/>
     <wire from="(400,400)" to="(500,400)"/>
-    <wire from="(410,230)" to="(410,320)"/>
-    <wire from="(410,320)" to="(500,320)"/>
+    <wire from="(410,230)" to="(410,300)"/>
+    <wire from="(410,300)" to="(500,300)"/>
     <wire from="(430,180)" to="(430,580)"/>
     <wire from="(430,580)" to="(500,580)"/>
     <wire from="(440,150)" to="(440,480)"/>
     <wire from="(440,480)" to="(500,480)"/>
     <wire from="(450,120)" to="(450,380)"/>
     <wire from="(450,380)" to="(500,380)"/>
-    <wire from="(460,300)" to="(500,300)"/>
-    <wire from="(460,90)" to="(460,300)"/>
-    <wire from="(470,360)" to="(470,420)"/>
-    <wire from="(470,360)" to="(720,360)"/>
+    <wire from="(460,280)" to="(500,280)"/>
+    <wire from="(460,90)" to="(460,280)"/>
+    <wire from="(470,320)" to="(470,360)"/>
+    <wire from="(470,320)" to="(500,320)"/>
+    <wire from="(470,360)" to="(740,360)"/>
+    <wire from="(470,420)" to="(470,460)"/>
     <wire from="(470,420)" to="(500,420)"/>
-    <wire from="(470,460)" to="(470,520)"/>
-    <wire from="(470,460)" to="(720,460)"/>
+    <wire from="(470,460)" to="(740,460)"/>
+    <wire from="(470,520)" to="(470,560)"/>
     <wire from="(470,520)" to="(500,520)"/>
-    <wire from="(470,560)" to="(470,620)"/>
-    <wire from="(470,560)" to="(720,560)"/>
-    <wire from="(470,620)" to="(500,620)"/>
-    <wire from="(720,300)" to="(960,300)"/>
-    <wire from="(720,320)" to="(720,360)"/>
+    <wire from="(470,560)" to="(740,560)"/>
+    <wire from="(720,280)" to="(890,280)"/>
+    <wire from="(720,300)" to="(870,300)"/>
     <wire from="(720,380)" to="(890,380)"/>
-    <wire from="(720,400)" to="(720,460)"/>
+    <wire from="(720,400)" to="(740,400)"/>
     <wire from="(720,480)" to="(900,480)"/>
-    <wire from="(720,500)" to="(720,560)"/>
+    <wire from="(720,500)" to="(740,500)"/>
     <wire from="(720,580)" to="(910,580)"/>
-    <wire from="(720,600)" to="(920,600)"/>
+    <wire from="(720,600)" to="(740,600)"/>
+    <wire from="(740,360)" to="(740,400)"/>
+    <wire from="(740,460)" to="(740,500)"/>
+    <wire from="(740,560)" to="(740,600)"/>
+    <wire from="(870,300)" to="(870,440)"/>
+    <wire from="(870,440)" to="(960,440)"/>
+    <wire from="(890,280)" to="(890,300)"/>
+    <wire from="(890,300)" to="(960,300)"/>
     <wire from="(890,330)" to="(890,380)"/>
     <wire from="(890,330)" to="(960,330)"/>
     <wire from="(900,360)" to="(900,480)"/>
     <wire from="(900,360)" to="(960,360)"/>
     <wire from="(910,390)" to="(910,580)"/>
     <wire from="(910,390)" to="(960,390)"/>
-    <wire from="(920,450)" to="(920,600)"/>
-    <wire from="(920,450)" to="(960,450)"/>
   </circuit>
   <circuit name="Half_Adder">
     <a name="appearance" val="logisim_evolution"/>

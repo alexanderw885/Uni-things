@@ -1,0 +1,145 @@
+---
+title: "Set_15"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+## Multiple Regression: variable selection
+
+if we have $p$ predictors/variables $x_1,...,x_p$, how do we choose which to include There's $2^p$ different potential models, so we can't test them all.
+Typically, we'll begin our analysis with two steps:
+
+1. Explore the relation between the response $Y$ and each predictor $x$
+
+
+2. Select which variables to include in the final model
+
+
+There's two general strategies
+
+1. test all single variables, choose which is the best. Then, try it with every other variable one at a time, choose the best. Repeat until it's accurate enough, or you have a max number of variables
+
+2. make a model with as many variables at a time. Remove the variable with the greatest p-value. Repeat until all variables are significant at some p-value threshold.
+
+here we'll do the second strategy, pruning. 
+
+In general, we want to remove interactions as soon as possible to increase simplicity faster.
+
+In general, if we have a sample size of $n$, we want to keep our variable count to less than $n\3$. any more than that, and since we'll be estimating so many parameters, none of them are very reliable. This is less the case now in special cases.
+
+___
+
+## Example: Air pollution
+
+110 observations of ozone concentration. We want to relate ozone concentration to: wind speed, air temp, and solar radiation.
+
+```{r}
+ozone.pollution<-read.table(file='~/Documents/uni/STAT359/data/ozone.data.txt',
+                            header=TRUE,sep="")
+attach(ozone.pollution)
+names(ozone.pollution)
+kable(ozone.pollution, caption = 'Ozone Study', align = 'l')
+```
+
+Lets do a pairs plot to see rough relations
+```{r}
+pairs(ozone.pollution)
+```
+
+The most important to us is the fourth row, ozone. visually, it appears that ozone relates to wind and temperature, but it does look somewhat non-linear. Radiation seems to affect ozone as well, but it's hard to say how.
+
+rad, temp, and wind do appear related as well, but that's not our focus at this moment.
+
+Keep in mind this is only looking at relationships between pairs, the actual relation is likely much more complicated.
+
+Since we're pruning, lets start with all three linear terms, quadratic terms for each variable, and all interactions. This means 3 main effects, 3 quadratic terms, 3 2-way interactions, and a 3-way interaction
+
+```{r}
+# temp*wind*rad gives all interactions and main effects
+# I(var^2) gives each quadratic effect.
+model1<-lm(ozone~temp*wind*rad+I(rad^2)+I(temp^2)+I(wind^2))
+summary(model1)
+```
+Overall, $r^2$ is 0.73. At most, we'll only be be able to explain $73\%$ of the variability.
+
+first, we should remove the 3-way interaction, as it has a high p-value and we shouldn't keep a 3-way interaction while removing a 2-way interaction
+
+```{r}
+model2<-update(model1,.~.- temp:wind:rad)
+summary(model2)
+```
+Next, remove temp:rad
+```{r}
+model3<-update(model2,.~.- temp:rad)
+summary(model3)
+```
+next, temp:wind
+
+```{r}
+model4<-update(model3,.~.- temp:wind)
+summary(model4)
+```
+and our last interaction can be removed as well
+
+```{r}
+model5<-update(model4,.~.- wind:rad)
+summary(model5)
+```
+Next we remove quadratics, so we get rid of rad^2
+```{r}
+model6<-update(model5,.~.- I(rad^2))
+summary(model6)
+```
+Now everything is significant, so we've pruned the dataset as much as necessary. We still explain $71\%$ of the variability, so it didn't go down much. 
+
+Before doing anything else, we should examine model diagnostics
+
+```{r}
+par(mfrow=c(1,3))
+plot(model6,which=c(1,2,4))
+```
+
+there's a few things to notice. 
+
+in the residuals plot, the variance appears to deviate from zero as the values increase. Scatter does seem to increase as the values increase. This means we might not have constant variance
+
+In the QQ-plot, the right tail seems to have far more weight than a normal plot, it might be asymmetric
+
+in the Cooke's distance plot, point 77 appears to have a very large influence.
+
+Before interpreting, we need to deal with these.
+
+Dealing with asymmetric distributions and increasing variance, log transformations help. Do remember that from now on, we are comparing to $log(Y)$, not $Y$. This may be important in some cases.
+
+
+```{r}
+model7<-update(model6,log(.)~.)
+summary(model7)
+```
+now we can remove the temp^2 variable, as it's no longer significant. 
+```{r}
+model8<-update(model7,~.-I(temp^2))
+summary(model8)
+```
+Now everything is significant again. We never remove the intercept. Lets look at our diagnostics again
+```{r}
+par(mfrow=c(1,3))
+plot(model8,which=c(1,2,4))
+```
+
+our QQ-plot looks way better, we know that this dataset is a log(normal) distribution. Variance looks better as well. However, now point 17 has a very large influence. Lets see what happens if we remove observation 17.
+
+**Be careful!** We don't necessarily want to keep it removed, our goal is to see if removing it changes our results at all. In the real life, we might want to investigate how we got observation 17, see if it's a data collection error or an outlier
+```{r}
+model9<-update(model8,.~.,subset=(1:length(ozone)!=17))
+summary(model9)
+```
+The model did not change significantly, the estimates and $r^2$ appear stable. The intercept did appear to change to become more significant.
+
+On the log scale, air temp and solar radiation are linearly related to ozone, and wind is quadratically related. This model explains $69\%$ of variability in ozone concentration.

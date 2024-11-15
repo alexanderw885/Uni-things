@@ -1,0 +1,176 @@
+---
+title: "Set_13"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Non-linear Regression
+
+all previous examples either were linear, or had methods to represent the data in a linear system. This cannot be done for these non-linear models.
+
+When might we want to do this? Non-linear models are very common in anything involving growth over time, and are very common in differential equations.
+4One example is an asymptotic exponential curve, such as $f(t)=a-be^{-ct}$, there a asymptotes to infinity, and c scales growth over time.
+
+___
+
+### Example: Growth of deer jaw
+
+theory indicates that the length of a deer's jaw bone changes as they age.
+
+```{r}
+deer<-read.table(file ='~/Documents/uni/STAT359/data/jaws.txt',header=TRUE,sep="")
+attach(deer)
+names(deer)
+plot(age, bone)
+```
+
+the data appears to grow quickly at first, but slows down as they age.
+
+We want to examine the data, and end up with a confidence interval for the curve.
+
+We want to use the following non-linear model:
+$$y_i=a-be^{-cx_i}+\epsilon_i$$
+where :
+$a$ is the asymptote
+epsilon is $\epsilon\sim{}N(0,\sigma^2)$
+
+We fit this model by minimizing the residual sum of squares $RSS$
+TODO PUT IN EQUATION
+
+
+in R, we use `nls()`to minimize RSS for non-linear squares.it's an iterative process. We need to be careful to choose good starting values for this, and we can't guarantee that our predictions will converge to a good result.
+
+How do we get good initial values?
+
+$a$ is our asymptote, we can estimate that to be around 120.
+ 
+note that $f(0)=a-b$, and in this case it looks like $f(0)=0$, so $b\approx120$ is a good starting value
+
+$c$ is a bit harder to estimate. We can ignore $\epsilon$ in our equation, and make the assumption that $f(\bar{X})=\bar{Y}$
+$$c=\log(\frac{120}{120-\bar{Y}})/\bar{X}$$
+
+```{r}
+a <- 120
+b <- 120
+c<-log(120/(120-mean(bone)))/mean(age)
+c
+
+library(nls2)
+model<-nls(bone~a-b*exp(-c*age), # Equation we want to model the data with
+           start = list(a=a,b=b,c=c)) # Starting values for a,b,c
+summary(model)
+```
+
+what if we use bad starting values?
+
+```{r}
+#model<-nls(bone~a-b*exp(-c*age),start = list(a=1,b=1,c=1))
+#summary(model)
+```
+This causes an error, as it doesn't converge
+
+How to get our confidence interval?
+$$\bar{\theta}\pm{}Z_{\alpha/2}SE(\hat{\theta})$$
+where $\hat{\theta}$ are the estimated model parameters
+**Note**: We are assuming that the parameters are normally distributed, which may not always be the case. 
+
+```{r}
+model<-nls(bone~a-b*exp(-c*age),start = list(a=120,b=120,c=0.061))
+## confidence intervals for a, b,c
+a.CI<-c(115.2528-1.96*2.9139,115.2528+1.96*2.9139)
+b.CI<-c(118.6875-1.96*7.8925,118.6875+1.96*7.8925)
+c.CI<-c(0.1235 - 1.96*0.0171,0.1235 + 1.96*0.0171)
+rbind(a.CI,b.CI,c.CI)
+```
+
+Looking at this data, the confidence intervals for $a$ and $b$ overlap. This might suggest that we could use a simpler model where $a=b$. What does that look like?
+```{r}
+model2 <- nls(bone~a-a*exp(-c*age),
+              start=c(a=a,c=c))
+
+anova(model2, model)
+```
+with such a high p-value, we have no reason to believe that our original model is any better than the new, simpler model
+
+or, computed manually:
+```{r}
+1-pf(0.1825,1,51)
+```
+
+Now, lets plot our new model
+
+```{r}
+plot(age, bone)
+age.fit<-seq(0,50,.1)
+b.length.fit<-predict(model2,list(age=age.fit))
+lines(age.fit,b.length.fit)
+title("Estimated Jaw Growth Over Time")
+```
+Now, lets get a confidence interval for this curve, like a band around it. 
+$$\hat{f}(t)\pm{}Z_{\alpha/2}SE(\hat{\hat{f}(t)})$$
+
+$$SE(\hat{f}(t))=\sqrt{\hat{VAR}(\hat{f}(t))}$$
+and for this model,
+$$\hat{f}(t)=\hat{a}-\hat{a}e^{\hat{c}t}$$
+What we can get out of R with our fitted model is a matrix of the estimated covariance of a and c $C_{\hat{a},\hat{c}}$
+
+```{r}
+C.hat<-vcov(model2)
+C.hat
+
+sqrt(diag(C.hat)) # diag(matrix) returns a diagonalized matrix
+```
+
+Now we have an estimate of the covariance of $\hat{a},\hat{c}$. now we want an estimate of $VAR(\hat{f}(t))$. It's found as a first order Taylor expansion.
+$$\hat{VAR}(\hat{f}(t))=(1-e^{-\hat{c}t)}*t\hat{a}e^{-\hat{c}t})C_{\hat{a},\hat{c}}vector((1-e^{-\hat{c}t}),(t\hat{a}e^{-\hat{c}t}))$$
+```{r}
+summary(model2)
+
+# plot points
+plot(age, bone)
+
+# plot the line of best fit
+age.fit<-seq(0,50,.1)
+b.length.fit<-predict(model2,list(age=age.fit))
+lines(age.fit,b.length.fit)
+title("Estimated Jaw Growth Over Time")
+
+
+# Get a-hat and c-hat from the model
+a.hat <- coef(model2)[1]
+c.hat <- coef(model2)[1]
+
+## compute VAR(f(t))
+# obtain the estimated covariance matrix of (a.hat,c.hat)
+C.hat<-vcov(model2)
+
+# vector will hold the variance of f.hat across time points
+# it's a vector because variance changes with respect to t, it's not a consistent value
+v.f.hat<-rep(0,length(age.fit))
+t<-age.fit # all the t points
+for (i in 1:length(t))
+{
+  # evaluate the gradient of f(t) at estimates
+  grad.f<-c(1-exp(-c.hat*t[i]), t[i]*a.hat*exp(-c.hat*t[i]))
+  # compute the variance
+  v.f.hat[i]<-t(grad.f)%*%C.hat%*%grad.f # %*% is matrix multiplication
+  
+} # this could have been vectorized
+
+#standard error
+SE.f<-sqrt(v.f.hat)
+# 95% confidence interval
+f.lower<-b.length.fit - 1.96*SE.f
+f.upper<-b.length.fit + 1.96*SE.f
+lines(age.fit,f.lower,col='red',lty=2)
+lines(age.fit,f.upper,col='red',lty=2)
+```
+
+
+
+

@@ -1,0 +1,364 @@
+---
+title: "What is ANOVA?"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+## ANOVA
+
+an abbreviation for "Analysis of Variance", it's a generalization of a t-test for when you want to compare more than two populations.
+
+Why might we want to compare multiple populations at the same time? 
+
+- A common reason is that each population might be a different level of some factor you want to experiment with. An example of this could be how much time you're giving something, a population at 5 seconds, 10 seconds, 15 seconds, and so on. You want to see how the samples change as you increase the amount of time.
+
+Our goal is now to see if the true means of each population differ as we change the level of the feature we're testing. If we determine they're different, we then want to know by how much.
+
+Terms going forwards:
+
+- $j$: the number of populations you want to compare
+
+- $n$: the number of samples in each population
+
+-  $y_{ij}$: the $i^{th}$ observation in the $j^{th}$ population. $i\leq{}n,j\leq{J}$
+
+Lets first go through the process with only two populations, before moving on to multiple.
+
+Let's examine the amount of ozone (ppm) in two commercial lettuce gardens
+
+```{r}
+oneway <- read.table(file='~/Documents/uni/STAT359/data/oneway.txt',
+                     header=TRUE, sep="")
+names(oneway)
+kable(oneway)
+```
+
+In this data set, all our observations are in one column, and the other column specific which population it's from. Lets analyse the data a little bit.
+
+```{r}
+summary(oneway)
+boxplot(oneway$ozone[oneway$garden == 'A'],
+        oneway$ozone[oneway$garden == 'B'],
+        names=c("Garden A", "Garden B"))
+```
+At a glance, it would appear that the amount of ozone is different.
+
+Let's look at all this data a different way now, let's group A and B together, plot the mean of all observations, and see how far each point is from the mean
+
+```{r}
+plot(oneway$ozone,
+     ylab='Ozone',
+     xlab='Observation number',
+     pch=21, # makes the dots solid instead of rings
+     bg='red') # colours the dots red
+
+abline(h=mean(oneway$ozone), col='blue') # plot mean
+
+## now we plot the distance from each point to the mean
+for (i in 1:length(oneway$ozone))
+{
+  lines(c(i,i),
+        c(mean(oneway$ozone), oneway$ozone[i]),
+        col='green')
+}
+```
+Now, we can see just how much error there is. These deviations are used to find the "sum of squares" $SSY$.
+$$SSY=\sum_{i=1}^n\sum_{j=1}^J(y_{ij}-\bar{y})^2$$
+This equation is just one that loops through every point, finds the different from the mean, squares it to not deal with negative values, and adds them all together. We can easily make this with a for loop
+```{r}
+SSY <- 0
+for (i in oneway$ozone)
+{
+  error <- i - mean(oneway$ozone)
+  SSY <- SSY + error**2
+}
+SSY
+```
+How many degrees of freedom does $SSY$ have?
+
+- there's $J$ populations with $n$ samples, so there's $nJ$ observations. There's also one parameter, $\bar{y}$, so we subtract that one from the degrees of freedom. This means that in the end, there's $nJ-1$ degrees of freedom.
+
+We can make that same graph, but this time lets separate the two gardens.
+
+```{r}
+plot(oneway$ozone,
+     ylab='Ozone',
+     xlab='Observation number',
+     pch=21, # makes the dots solid instead of rings
+     bg='red') # colours the dots red
+
+abline(h=mean(oneway$ozone[oneway$garden == 'A']), col='blue')
+abline(h=mean(oneway$ozone[oneway$garden == 'B']), col='green')
+
+## now we plot the distance from each point to the mean
+for (i in 1:length(oneway$ozone))
+{
+  if(oneway$garden[i] == 'A')
+  {
+    lines(c(i,i),
+        c(mean(oneway$ozone[oneway$garden == 'A']), oneway$ozone[i]),
+        col='blue')
+  }
+  else
+  {
+    lines(c(i,i),
+          c(mean(oneway$ozone[oneway$garden == 'B']), oneway$ozone[i]),
+          col='green')
+  }
+}
+```
+Now how much error is there? This value is called the "error sum of squares" $SSE$
+$$SSY=\sum_{i=1}^n\sum_{j=1}^J(y_{ij}-\bar{y_j})^2$$
+You'll notice the only difference here is that we subtract $\bar{y}_i$ instead of $\bar{y}$. We still calculate the error for every point and add it up.
+
+```{r}
+SSE <- 0
+
+for (i in 1:length(oneway$ozone))
+{
+  error <- 0
+  if (oneway$garden[i] == "A")
+  {
+    error <- oneway$ozone[i] - mean(oneway$ozone[oneway$garden == 'A'])
+  }
+  else
+  {
+    error <- oneway$ozone[i] - mean(oneway$ozone[oneway$garden == 'B'])
+  }
+  SSE <- SSE + (error**2)
+}
+SSE
+```
+You'll notice that the $SSE$ is lower than the $SSY$, and this will almost always be the case. $SSE=SSY$ if the mean of each population is the same, but $SSE$ will *always* be less than or equal to  $SSY$.
+
+How many degrees of freedom does $SSE$ have?
+
+- We're still using $nJ$ observations, but this time we have one parameter, the mean, for each of the $J$ populations, so we need to subtract those out. $SSE$ ends up with $nJ-J=(n-1)J$ degrees of freedom.
+
+Now that we have $SSE$ and $SSY$, our goal is to compare them. This is finally when we get to ANOVA testing.
+
+## ANOVA
+
+we want to break up the sum of squares $SSY$ into two parts. 
+
+- $SSE$, which is a measure of the error variability around each individual population
+
+- $SSA$, which is a measure of the variability between the population means and the overall mean.
+$$SSA=n\sum_{j=1}^J(\bar{y}_j-\bar{y})^2$$
+SSA has $J$ observations in the form of $\bar{y}_j$, and one parameter $\bar{y}$, so it has $J-1$ degrees of freedom.
+
+notice that the degrees of freedom of $SSA$ and $SSE$ also add up to the degrees of freedom of $SSY$
+
+```{r}
+SSA <- 0
+for (i in unique(oneway$garden))
+{
+  a <- mean(oneway$ozone[oneway$garden == i]) - mean(oneway$ozone)
+  SSA <- SSA + a**2
+}
+SSA <- SSA * length(oneway$ozone[oneway$garden == 'A'])
+SSA
+```
+Now that we've calculated each value, we can verify that $SSY=SSA+SSE$
+```{r}
+SSY
+SSA + SSE
+```
+
+We can get two more important values, derived from $SSA,SSE$. By dividing them by their degrees of freedom, we can the "mean squares" $MSA,MSE$
+$$MSA=\frac{SSA}{J-1}$$
+$$MSE=\frac{SSE}{(n-1)J}$$
+And finally, after all this, we can get our test statistic $F$
+$$F=\frac{MSA}{MSE}$$
+our test statistic is from an F-distribution $F_{J-1,J(n-1)}$. We just need to find $P(X\geq{}F_{obs})$
+```{r}
+n <- length(oneway$ozone[oneway$garden == 'A'])
+J <- length(unique(oneway$garden))
+MSE <- SSE / (n*J - J)
+MSA <- SSA / (J - 1)
+F.obs <- MSA / MSE
+F.obs
+
+p.val <- 1 - pf(F.obs, J-1, J * (n - 1))
+p.val
+```
+In this case, since the p-value is so small, ANOVA testing tells us that it's unlikely that the amount of ozone is the same between these two gardens.
+
+We can do all of this automatically with the `aov` command
+```{r}
+summary(aov(oneway$ozone~oneway$garden)) # ozone~garden means we're testing ozone with respect to garden.
+```
+In this summary, the values in `oneway$garden` are for $SSA$ and $MSA$. The residuals are $SSE$ and $MSE$.
+
+Lets look closer at the assumptions we're making with ANOVA testing.
+
+### Assumptions
+
+we're assuming that all our points $y_{ij}$ are coming from the following distribution
+$$Y_{ij}=\mu+\alpha_j+\epsilon_{ij}$$
+$\mu$ is the overall mean of all the populations
+$\alpha_j$ is the difference between the true mean $\mu$ and the mean of the  $j^{th}$ population. $\mu_j+\alpha_j=\mu$
+$\epsilon_{ij}\sim{}N(0,\sigma^2)$ it the variance in each population, or the measurement error. This is where our assumption is.
+
+We're assuming that the distribution of each population is normal. We need to check this assumption before we can say with confidence that our test was reasonable to use.
+
+We do this by checking the residuals, $y_{ij}-\bar{y}_j$. We check that for each population, the difference from each point to the population mean is normally distributed. We can use the `resid` function to get these values
+```{r}
+resid.garden <- resid(aov(oneway$ozone~oneway$garden))
+qqnorm(resid.garden)
+qqline(resid.garden)
+```
+There is banding due to rounding in the data, but this does appear to be normal. Our assumptions hold, so our test was valid.
+
+___
+
+Let's go through the process manually one more time, this time with a dataset with more than two levels of the factor we're testing
+
+# Plant Competition
+
+In this dataset, we're observing biomass, and our experimental factor is what type of pruning we're doing. There's control with no clipping, two levels of root pruning, and two levels of shoot pruning.
+```{r}
+comp <- read.table(file='~/Documents/uni/STAT359/data/competition.txt',
+                   header=TRUE,
+                   sep="")
+kable(comp)
+attach(comp)
+names(comp)
+```
+lets start by graphing the data a little bit
+```{r}
+boxplot(biomass[clipping=='control'],
+        biomass[clipping=='n25'],
+        biomass[clipping=='n50'],
+        biomass[clipping=='r5'],
+        biomass[clipping=='r10'],
+        names=c('control','n25','n50','r5','r10'))
+```
+Visually, there does appear to be a difference between control and everything else. Lets perform ANOVA testing to see the results
+```{r}
+SSY <- sum((biomass-mean(biomass))^2)
+SSY
+
+SSE <- sum((biomass[clipping=='control'] - mean(biomass[clipping=='control']))^2) +
+      sum((biomass[clipping=='n25']     - mean(biomass[clipping=='n25']))^2) +
+      sum((biomass[clipping=='n50']     - mean(biomass[clipping=='n50']))^2) +
+      sum((biomass[clipping=='r5']      - mean(biomass[clipping=='r5']))^2) +
+      sum((biomass[clipping=='r10']     - mean(biomass[clipping=='r10']))^2)
+SSE
+SSA <- SSY - SSE
+SSA
+
+n <- length(biomass[clipping=='control'])
+J <- length(unique(clipping))
+MSA <- SSA / (J - 1)
+MSE = SSE / (n * J - J)
+MSA
+MSE
+
+F.obs <- MSA / MSE
+p.val <- 1 - pf(F.obs, J-1, J *(n-1))
+p.val
+```
+What does this tell us? Not very much. We can say that not all of the populations come from the same distribution, or that some type of clipping has some effect, but that's not very helpful. Instead, let's use graphs to visually compare everything.
+
+```{r}
+heights <- tapply(biomass, clipping, mean)
+heights
+barplot(heights,
+        xlab='Treatment',
+        ylab='Biomass',
+        col='green')
+```
+This doesn't tell us anything useful, this is just the means of each population. Lets add error bars to make this more useful. Here's a function to plot error bars onto the graph
+```{r}
+error.bars <- function(height, error)
+{
+  # takes the height of the bars, along with the half-width of the error.
+  x <- barplot(height, plot=F)
+  n <- length(height)
+  
+  for (i in 1:n)
+  {
+    arrows(x[i],height[i]-error[i], # lower bound of error bar
+           x[i],height[i]+error[i], # upper bound of error bar
+           code=3,angle=90,length=0.15) # shape of bar
+  }
+}
+```
+
+How do we decide how big our error bars should be? The simplest idea is just the 95% confidence interval for the population. We can use the ANOVA function to get the variance easily.
+```{r}
+summary(aov(biomass~clipping))
+sigma.hat<-summary.lm(aov(biomass~clipping))$sigma
+sigma.hat
+```
+now we divide it by $\sqrt{J}$ to account for the fact it's calculated from $J$ different populations
+```{r}
+se.mean <- sigma.hat / sqrt(6)
+se.mean
+```
+We can also calculate this manually, the standard error of means is calculated with:
+$$\sqrt{MSE/n}$$
+```{r}
+se.mean
+sqrt(MSE / n)
+```
+
+now we can use this to plot our error bars
+```{r}
+barplot(heights,
+        col="green", 
+        ylim=c(0,700),
+        ylab="mean biomass", 
+        xlab = "competition treatment")
+bar.half.width<-rep(se.mean,6)
+error.bars(heights,bar.half.width)
+```
+
+Now what we can do is compare the error bars, and if there' any overlap that means there's not evidence against the null hypothesis, or we can't say those two populations are different.
+
+However, this isn't a great method of making error bars. They're all based off the standard error of the overall mean, when we're more interested in how the means of each population differ from each other. What if one population has a lot more variance than another? We need a better way of doing this.
+
+The best way of making error bars if to use the "Least Significant Difference" LSD.
+$$LSD=2*SE_{diff}$$
+where $SE_{diff}$ is the standard error of the difference between two sample means
+$$SE_{diff}=\sqrt2*\sqrt{MSE/n}$$
+$\sqrt{\frac{MSE}{n}}$ is actually the same as `se.mean` that we calculated earlier, so we can reuse that. However, for clarity in how these bars are derived, we will not.
+
+Now let's plot our error bars
+```{r}
+LSD <- 2 * sqrt(2) * sqrt(MSE / n)
+error <- rep(LSD/2, 5)
+barplot(heights, 
+        col="green", 
+        ylim=c(0,max(heights) + LSD),
+        ylab="mean biomass", 
+        xlab = "competition treatment")
+error.bars(heights, error)
+```
+
+Now we compare the error bars, and if any overlap, there's no evidence they're different. In this example, we can say there's evidence that clipping does lead to more biomass than not clipping, but there's no evidence that the type of clipping matters.
+
+Now, to make sure our tests are valid, lets check our assumption of the error from each population mean, the residuals, are normally distributed.
+
+```{r}
+resid.clipping <- resid(aov(biomass~clipping))
+qqnorm(resid.clipping)
+qqline(resid.clipping)
+```
+
+This looks normal, so our assumptions holds. Our testing is valid.
+
+
+
+
+
+
+
+

@@ -3,7 +3,7 @@ how to choose which [[Logical Query Plans]] is best, turn into physical query pl
 remember the [external memory model](Evaluating%20Query%20Performance) and [[B+ Tree index]]
 
 ### Stats review
-remember [[Expected value]], [independent events](Probability-independent%20events%20+%20Mutual%20exclusive) 
+remember [[Expected value]], [independent events](Probability-independent%20events%20+%20Mutual%20exclusive.md) 
 
 ### Cost estimation
 T(R) number of tuples in R
