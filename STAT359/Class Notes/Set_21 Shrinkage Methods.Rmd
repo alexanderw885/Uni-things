@@ -1,0 +1,139 @@
+---
+title: "Set_21 Shrinkage Methods"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ridge Regression and Lasso
+
+These are what to use when you have more parameters than you have data.
+
+A shrinkage approach will estimate the regression model. Just like other methods, they minimize the RSS. However, on top of that, they also add a penalty on a norm of the regression coefficients. This "shrinks" the parameters towards zero.
+
+All the parameters that are penalized too heavily get set closer and closer to zero, removing them from the model. Shrinking may also also reduce variance, improving the MSE
+$$MSE(\hat\beta_j)=Var(\hat\beta_j)+E(\hat\beta_j)-\hat\beta_j)^2$$
+
+Ridge regression produces an estimator $\hat\beta^{(R)}$, which minimizes the quantity:
+$$RSS+\lambda\sum_{j=1}^p\beta_j^2$$
+lambda $\lambda$ is a tuning hyperparameter, it controls the regularization. WE use cross-validation to set it.
+
+if $\lambda=0$, we get a normal least-squares estimator.
+
+If as $\lambda\rightarrow\infty$, everything gets shrunk to zero.
+
+We can view the ridge estimator as a full continuum of estimators, depending on lambda. $\hat\beta_\lambda^{(R)}$. We want to find the best lambda to minimize the error.
+
+Also note that the penalty does not include the intercept.
+
+We make sure to scale all of the covariates so that they have a variance of 1. This does not change the relations, but it makes everything more numerically stable.
+
+Another type of penalty is Lasso (L1), with L1 it's possible to drive coefficients to zero before $\lambda$ reaches infinity. However, they won't all go to zero at the same time.
+$$RSS+\lambda\sum_{j=1}^p|B_j|$$
+
+As it sets variables to zero, it automatically selects what variables are to be kept in the model, you don't have to do any other selections after. Now, exactly what lambda value we choose is very important.
+
+We've used L2, we've used L1, we can use any LP. If we use LP, $P\leq1$, we get a sparse regression estimators. $P1=1$ is the only one that's convex, so it's easy to optimize.
+
+When $P>1$, we also get convexity, but it won't be sparse.
+
+both ridge and lasso regression can be viewed as constrained optimization, both in the form:
+$$minimize: \sum_{i=1}^n(y_i-\beta_0-\sum_{j=1}^p\beta_jx_{ij})^2$$
+ridge is constrained to:
+$$\sum_{j=1}^p\beta_j^2\leq{}s$$
+and lasso is constrained to:
+$$\sum_{j=1}^p|\beta_j|\leq{}s$$
+In all cases, $s$ is a hyperparameters that you need to set. As you reduce $s$, the constraint get more significant. It's not the same as lambda, but the two are related. If you want a lambda of two, there is an equation that relates it to $s$.
+
+
+If you have many variables and think some aren't important, ridge regression is preferred.
+
+If you have many variables and think they all matter, even if only very slightly, lasso regression is preferred.
+
+You can always run both and then anova test to see which performs better.
+
+Cross validation is good for fine-tuning parameters. Let's use it to find a good lambda value
+
+```{r}
+library(ISLR)
+# fix(Hitters) ## built-in dataset that we can now modify
+#Just like set 20, we're predicting salary.
+
+Hitters = na.omit(Hitters) 
+x=model.matrix(Salary~.,Hitters)[,-1] 
+y=Hitters$Salary
+
+library(glmnet) #used for ridge regression, linear regression, many things
+# good to learn, website is well-documented.
+
+grid=10^seq(10,-2,length=100) #making a grid of all our possible starting alpha values.
+# By making a whole vector of lambdas, the function uses vectorization to optimize all lambdas at the same time.
+
+ridge.mod=glmnet(x,y,alpha=0,lambda=grid) ## alpha = 0 yields ridge regression
+
+dim(coef(ridge.mod)) ## obtain a sequence of estimates for each of 20 variables
+ridge.mod$lambda [50] # What's the 50th value of lambda after optimization?
+coef(ridge.mod)[,50] #with that value, what are our coefficients?
+sqrt(sum(coef(ridge.mod)[-1,50]^2))#Sum of squares of the estimates, the penalty
+
+# What about the 60th value?
+ridge.mod$lambda [60] # What's the 60th value of lambda after optimization?
+coef(ridge.mod)[,60] #with that value, what are our coefficients?
+#You can how much of a difference that lambda makes
+
+sqrt(sum(coef(ridge.mod)[-1,60]^2))#Sum of squares of the estimates, the penalty
+```
+
+Now that we've looked at things a bit, lets do cross validation
+
+```{r}
+set.seed (1)
+train=sample(1:nrow(x), nrow(x)/2) #Note: not true k-fold validation, just a simple example.
+#Look at set 20 for a better example of cross-validation, or SENG 474
+test=(-train)
+y.test=y[test]
+
+ridge.mod=glmnet(x[train,],y[train],alpha=0,lambda=grid, thresh =1e-12) #train all lambda values on training set
+
+ridge.pred=predict(ridge.mod,s=4,newx=x[test,])  # run on the test set
+mean((ridge.pred-y.test)^2) #MSE of the prediction where s=4
+
+## suppose we fit the null model
+mean((mean(y[train])-y.test)^2) # Just the intercept, no other covariants. This gives us a baseline
+# We can see that didn't do a good job at all, our model with s=4 did significantly better
+# you can also get the null model by setting s to a large value such as 1e10
+
+# we can graph our error, it even does cross validation for you.
+set.seed (1)
+cv.out=cv.glmnet(x[train ,],y[train],alpha=0)
+plot(cv.out)
+
+bestlam=cv.out$lambda.min # will be different from the graph value, not that it's plotting with LOG(lambda) on the x-axis
+bestlam
+
+# what are the coefficients?
+out=glmnet(x,y,alpha=0)
+predict(out,type="coefficients",s=bestlam)[1:20,]
+
+# What if we set alpha=1, meaning we get specifically lasso regression?
+lasso.mod=glmnet(x[train ,],y[train],alpha=1,lambda=grid)
+plot(lasso.mod)
+```
+
+How do we read that graph?
+
+That is the lasso path. Each line corresponds to one of the 19 variables in the data. As you make lambda smaller, the coefficient for each variables goes to zero.
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,133 @@
+---
+title: "Set_22 Dimension Reduction Methods"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Dimension Reduction Methods: Principal Components Regression
+
+Along with variable selection and shrinkage estimation, dimension reduction is another way to control variance.
+
+We construct functions called $X-1,...X_p$ made out of the predictors and then reduce their dimension with the standard least squares estimation.
+
+We can do this by defining $Z_1,...,Z_M$, $M<p$, each as a linear combination of $X_1,...X_p$.
+$$Z_m=\sum_{j=1}^p\phi_{jm}X_j$$
+for some constants $\phi_{1m},...,\phi_{jm}$.
+
+Now we only have $M$ predictors, less than the $p$ that we started with.
+
+now that we have a lower dimensional model, we can fit hte regression model onto $Y$ using least squares. Each $\beta_i$ in normal regression will be represented with $\sum_{m=1}^m\theta_m\phi_{jm}$
+
+The most standard way to obtain $z$ and the coefficients $\phi_{jm}$ is called "principle components".
+
+Our data is represented by an $n\times{}p$ matrix $X$. $n$ points, each with $p$ predictors.
+
+Our first principle component is the direction in which the data varies the most in the n-dimensional space the data resides in. We project all the data onto this line, a one-dimensional space. 
+given predictors $p_1,...,p_n$, it's given by:
+$$Z_1=c_{1,1}(p_1-\bar{p}_1)+...+c_{1n}(p_n-\bar{p}_n)$$
+where $c$ is some constant to multiply each predictor by, computed from the data.
+
+Now, we can do it again. Looking at the original data, find the direction with the second highest variance, that is *orthogonal* to the original line.
+$$Z_2=c_{2,1}(p_1-\bar{p}_1)+...+c_{2,n}(p_n-\bar{p}_n)$$
+We can do this as many times as needed. if we compute $p$ principle components, we just get a rotation of the original data. If we have 100 predictors, we might just need to compute 4 or 5 principle components, drastically simplifying the data while retaining nearly all the information.
+
+the first principle component $Z_1$ is linear, and captures a lot of information from the original predictors.
+
+$Z_2$ is another linear combination of all predictors, but that's uncorrelated with $Z_1$. It has less variability than $Z_1$.
+
+___
+
+### Example
+
+Using the Hitters dataset again, lets use dimension reduction to try to predict salary
+
+```{r}
+library(pls)
+library(ISLR)
+set.seed(2)
+
+Hitters <- na.omit(Hitters)
+```
+
+Before we can use this method, it's important to normalize all the variables. If we don't scale them all to have variance of 1, Our principle component will likely just end up as the predictor with the most variance. `scale=TRUE` does this for us
+
+```{r}
+pcr.fit=pcr(Salary~., data=Hitters ,
+            scale=TRUE,  # Scales the data to have variance=1
+            validation ="CV") # Cross-validation, used to select the best number of components.
+summary(pcr.fit)
+validationplot(pcr.fit,val.type="MSEP")
+```
+
+The plot is called the "validation plot". You can see that as soon as we added the second principle component, the mean squared error prediction went way down. After the second component, we get very little benefit from adding more.
+
+What if we train on one half of the data, and then predict on the other half? Do a little train-test set thing
+
+```{r}
+set.seed(1)
+train=sample(1:nrow(Hitters), nrow(Hitters)/2)
+test=(-train)
+pcr.fit=pcr(Salary~.,data=Hitters,subset=train,scale=TRUE, validation ="CV")
+validationplot(pcr.fit,val.type="MSEP")
+
+x=model.matrix(Salary~.,Hitters)[,-1]
+y=Hitters$Salary
+y.test=y[test]
+
+# What's our MSE on the test set with 7 components?
+pcr.pred=predict(pcr.fit,x[test,],ncomp=7) 
+mean((pcr.pred-y.test)^2)
+
+# What about with only one component?
+pcr.pred=predict(pcr.fit,x[test,],ncomp=1)
+mean((pcr.pred-y.test)^2)
+```
+
+On training data, adding more components will reduce MSE
+
+ON testing data, after a point, adding more components will *increase* MSE. This point where is starts to rise is the optimal number of components.
+
+How do these values compare to ridge regression or lasso?
+
+```{r}
+library(glmnet)
+grid=10^seq(10,-2,length=100)
+ridge.mod=glmnet(x[train ,],y[train],alpha=0,lambda=grid) ## alpha = 0 yields ridge regression
+cv.out=cv.glmnet(x[train ,],y[train],alpha=0)
+bestlam=cv.out$lambda.min
+ridge.pred=predict(ridge.mod,s=bestlam ,newx=x[test,])
+mean((ridge.pred-y.test)^2)
+```
+
+In this case, ridge regression is actually better than principle component regression.
+
+```{r}
+lasso.mod=glmnet(x[train ,],y[train],alpha=1,lambda=grid) ## alpha = 1 yields lasso regression
+cv.out=cv.glmnet(x[train ,],y[train],alpha=1)
+bestlam=cv.out$lambda.min
+lasso.pred=predict(lasso.mod,s=bestlam ,newx=x[test,])
+mean((lasso.pred-y.test)^2)
+```
+
+Lasso isn't as good as ridge regression in this case, and about the same as principle component regression.
+
+What about simple least squares prediction?
+
+```{r}
+l.mod=glmnet(x[train ,],y[train],alpha=1,lambda=grid) ## alpha = 1 yields lasso regression
+lam.ls=0
+l.pred=predict(l.mod,s=lam.ls ,newx=x[test,])
+mean((l.pred-y.test)^2)
+```
+
+This perform the worst of them all. Note that principle component regression performed better than regular regression, despite projecting the original data and not using it directly. All of these more complicated methods perform better than the simple one.
+
+In the real world, testing multiple different methods and comparing the best is a great idea, it should be done to find the best model.
+
+
+

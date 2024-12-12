@@ -1,0 +1,97 @@
+---
+title: "Assignment 6"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+# 1
+
+```{r}
+geriatric <- read.table(file='~/Documents/uni/STAT359/data/geriatric.txt',
+                        header=TRUE, sep='')
+```
+
+## a)
+
+```{r}
+mod1 <-glm(Fall~exp(Int)+exp(Sex)+exp(BI)+exp(SI),
+           data=geriatric, family=poisson)
+summary(mod1)
+```
+
+\newpage
+
+## b)
+
+```{r}
+deviance(mod1)
+mod1$df.residual
+1-pchisq(deviance(mod1), mod1$df.residual)
+```
+
+The p-value is $\approx0.035$, meaning there is evidence that this model is adequate for this data.
+
+## c)
+
+```{r}
+plot(mod1$residuals)
+```
+
+While most points stay within the range $[-1, 2]$, point 34 does appear greater than the rest.
+
+```{r}
+mod1$residuals[34]
+```
+
+While this point does stand out, it isn't far out of the range of the other values, so it may not have a significant impact.
+
+## d)
+
+```{r}
+mod2 <- update(mod1, .~. - exp(Sex))
+anova(mod1, mod2, test="Chi")
+```
+
+In this case, we have no evidence that a model without sex peforms any better than the model that includes it. 
+
+## e)
+
+```{r}
+summary(mod2)
+confint(mod2, "exp(Int)")
+```
+
+According to this confidence interval, intervention will reduce the average number of falls by between 0.4 and 0.7.
+
+## f) 
+
+ 
+We have reason to believe that aerobic education and exercise do lead to a reduction of falls, even after taking into account both balance and strength. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

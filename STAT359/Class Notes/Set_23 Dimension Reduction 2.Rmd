@@ -1,0 +1,83 @@
+---
+title: "Set_23 Dimension Reduction 2"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Dimension Reduction Methods: Partial Least Squares
+
+PCR, the approach used in set 22, finds linear combinations of data to best capture  information, without taking into account the response Y. It was reducing the dimensions of X without looking at Y, without a target. This is called "unsupervised reduction"
+
+Partial least squares (PLS) is a *supervised* approach to dimension reduction. It starts the same as PCR, trying to identify $Z_1,...,Z_M$, with $M<p$. But, it doesn't just project Y, it fits a least squares regression of Y onto $Z_1,...,Z_M$ instead. It uses this regression to find the next components $Z$.
+
+the first projection $Z_1=\sum_{j=1}^p\phi_{j1}X_j$ is obtained by setting each $\phi_{j1}$ to an estimated regression coefficient from a regular single linear regression of Y onto each $X_j$. So we're performing regular regression, then taking those coefficients, the predicted line of best fit for each variable, and using those to make $Z_1$.
+
+This approach does not keep as much variability as the PCR approach, but instead places the most weight on variables most correlated to Y.
+
+To get $Z_2$, we regress $X_j$ onto $Z_1$, and take the residuals. These residuals are called $\tilde{X_1},...,\tilde{X_j}$.
+
+We then regress $Y$ onto each $\tilde{X_1},...,\tilde{X_j}$ with single regression, and take the coefficients. These coefficients are then used to make $Z_2$. 
+
+___
+
+### Example
+
+Let's use Hitters again, with Salary as our target.
+
+```{r}
+library(pls)
+library(ISLR)
+set.seed(2)
+
+Hitters = na.omit(Hitters)
+
+#Set up training and testing set
+train=sample(1:nrow(Hitters), nrow(Hitters)/2)
+test=(-train)
+x=model.matrix(Salary~.,Hitters)[,-1]
+y=Hitters$Salary
+y.test=y[test]
+length(y.test)
+x.test<-x[test,]
+nrow(x.test)
+
+
+pls.fit=plsr(Salary~., data=Hitters, #plsr is partial least squares reduction
+             subset=train,
+             scale=TRUE, 
+             validation ="CV")
+summary(pls.fit)
+validationplot(pls.fit,val.type="MSEP")
+```
+
+It appears the MSEP is least at 2 dimensions, so two is possible the best number of components. What about with full cross validation?
+
+```{r}
+pcr.fit=pcr(Salary~.,data=Hitters,subset=train,scale=TRUE, validation ="CV")
+validationplot(pcr.fit,val.type="MSEP")
+```
+
+Around 7 or so components is best, but this is still all on the training data. Lets predict on the test data to get a better understanding.
+
+```{r}
+pls.pred=predict(pls.fit,x[test,],ncomp=2) 
+mean((pls.pred-y.test)^2)
+pcr.pred=predict(pcr.fit,x[test,],ncomp=5)
+mean((pcr.pred-y.test)^2)
+```
+
+5 components gives a very nice result, on this dataset it performs much better than PCR did in the last lecture.
+
+This method is less popular than PCR, but does have its merits.
+
+As a whole, dimension reduction methods are very good for high-dimension settings, where $p$ approaches or even surpasses $n$. In these cases, standard estimation approaches perform poorly, so shrinkage or dimension reduction is very useful.
+
+
+
+
+

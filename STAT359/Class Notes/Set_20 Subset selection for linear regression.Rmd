@@ -1,0 +1,210 @@
+---
+title: "Set_20 Subset selection for linear regression"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Subset Selection for Linear Regression
+
+This is the start of the "special topics" section of the coursem and it uses the other textbook "An Introduction to Statistical Learning with Applications in R"
+
+Lets go back to multiple regression:
+$$Y=\beta_0+\beta_1X_1+...+\beta_pX_p+\epsilon$$
+
+What we've done so far when selecting variables is we start with all variables, then remove the least significant ones. This was backwards selection
+
+lets look at Best subset selection:
+let $M_0$ denote the null model, with only an intercept.
+for $k=1,...,p$, fit all $_kC_p$ that have exactly $k$ variables. choose the best model with the smallest Residual sum of squares (RSS) and call that $M_k$.
+
+We can't use RSS to test which model is best out of $M_0,...,M_p$ since RSS will always be smaller for the models with more terms. There,s a few methods we can use to select the best method:
+
+- $$C_p:\frac{1}{n}(RSS+2d\hat\sigma^2)$$
+Where $d$ is the number of variables in the model, $2d\hat\sigma^2$ is the penalty for adding parameters to a model.
+
+- $AIC:\frac{1}{n\hat\sigma^2}(RSS+2d\hat\sigma)$
+
+- $BIC:\frac{1}{n\hat\sigma^2}(RSS+log(n)d\hat\sigma)$
+slightly different penalty compared to AIC, now the penalty increases with the sample size, instead of at a constant rate of 2.
+
+- Adjusted $R^2$: $R^2$ with a penalty for larger numbers of variables.
+$$1-\frac{RSS/(n-d-1)}{TSS/(n-1)}$$
+
+You can also use cross-validation, like in SENG 474. Train the model on a subset of the data, test on the other subset. We use the results of the test set to compute the MSE. We can extend this to k-fold validation, by splitting the data into k "folds", training a model on each set of $k-1$ folds, and test on the remaining fold. we then take the average of each models MSE.
+
+How do we choose how many folds? More folds means we get a smaller test set, but less folds means a smaller training set. 10-fold is pretty common
+
+Cross validation is got for predictive models, while BIC might be best to find the true model, or to make inferences.
+
+with best subset selection, we need to test $2^p$ models, which is completely unfeasible in larger models, it can only be done up to about $p=40$. This is why step-wise methods such as forwards or backwards selection is used.
+
+Forward selection:
+
+Stat with $M_0$
+
+Add the predictor that improves the fit the most, looking at RSS. Repeat until you have $M_0,...,M_p$
+
+choose the best model from those p models, same as best fit.
+
+this method only requires you to fit $1+p(p-1)/2$ models, which is much better. However, it's possible that it won't get the best possible model.
+
+___
+
+# Example
+
+this is on the built-in dataset "Hitters"
+
+```{r}
+library(ISLR)
+#fix(Hitters)
+names(Hitters)
+dim(Hitters)
+sum(is.na(Hitters$Salary))
+
+Hitters <- na.omit(Hitters) # remove any missing values. Not a good way of handling large amounts of missing data.
+# It can be better to impute the data, things like fill the NA values with mean\medians
+dim(Hitters)
+```
+
+```{r}
+library(leaps)
+# Best Subset Regression, trying to predict salary using '.', which means everything else
+regfit.full <- regsubsets(Salary~.,Hitters) 
+summary(regfit.full)
+```
+
+Row 1 in the grid means model with only 1 predictor. The star shows what's in it, so CRBI is the best if there's only one predictor. If there's two, it's CRBI and Hits. Note that the grid is so wide it's split in 2, the bottom grid is part of the top one.
+
+
+
+```{r}
+regfit.full = regsubsets(Salary~.,Hitters,nvmax = 19)
+reg.summary = summary(regfit.full)
+names(reg.summary)
+reg.summary$rsq
+```
+
+You can see that the rsq or $R^2$ goes up as we increase the size of the model, much faster when there's not many variables. We can plot these summaries.
+
+lets plot RSS against num. variables, and adjusted $R^2$ against num. variables
+
+```{r}
+par(mfrow=c(2,2))
+plot(reg.summary$rss,xlab='Number of Variables',ylab = 'RSS', type = 'l')
+plot(reg.summary$adjr2 ,xlab="Number of Variables ", ylab="Adjusted RSq",type='l')
+which.max(reg.summary$adjr2)
+# model with 11 predictors did best for adjusted rsq, lets highlight that in the graph
+points(11,reg.summary$adjr2[11], col="red",cex=2,pch=20)
+```
+
+Lets also compare the number of variables to $C_p$ and highlight the best/lowest score
+
+```{r}
+plot(reg.summary$cp ,xlab="Number of Variables ",ylab="Cp", type='l')
+which.min(reg.summary$cp )
+# 10 variables is best
+points(10,reg.summary$cp [10],col="red",cex=2,pch=20)
+```
+
+Last of all, we can do BIC, which penalizes large models a lot more
+
+```{r}
+plot(reg.summary$bic ,xlab="Number of Variables ",ylab="BIC", type='l')
+which.min(reg.summary$bic )
+# 6 is best according to BIC
+points(6,reg.summary$bic [6],col="red",cex=2,pch=20)
+```
+we can extract the coefficients easily
+
+```{r}
+coef(regfit.full ,6)
+```
+
+What do we get with forward selection instead of best selection? Best selection is always better, but in a large dataset might not be feasible to do.
+
+```{r}
+regfit.fwd <- regsubsets(Salary~.,data=Hitters ,nvmax=19, method ='forward')
+summary(regfit.fwd)
+```
+
+Another way to select variables is with cross validation
+
+```{r}
+set.seed <- 1 # for consistency
+train=sample(c(TRUE,FALSE),nrow(Hitters),rep=TRUE)
+test <- (!train)
+
+
+# validation
+regfit.best=regsubsets(Salary~.,data=Hitters[train,], nvmax =19)
+test.mat=model.matrix(Salary~.,data=Hitters[test,])  
+val.errors=rep(NA,19)
+for(i in 1:19)
+  {
+  coefi=coef(regfit.best,id=i)
+  pred=test.mat[,names(coefi)]%*%coefi
+  val.errors[i]=mean((Hitters$Salary[test]-pred)^2)
+}
+
+# Checking results
+val.errors
+which.min(val.errors)
+coef(regfit.best ,which.min(val.errors))
+
+```
+
+again, cross-validation is best for when you're making predictions, but when you're trying to make inferences, it's often best to use BIC
+
+We can put all of that code into one function, to do it all for us
+
+```{r}
+predict.regsubsets =function (object ,newdata ,id ,...)
+{
+  form <- as.formula(object$call [[2]])
+  mat <- model.matrix(form,newdata)
+  coefi <- coef(object ,id=id)
+  xvars <- names(coefi)
+  mat[,xvars]%*%coefi 
+}
+```
+
+Now, we can use this to do cross validation in a better way. We can do k-fold cross-validation.
+
+```{r}
+k <- 10
+set.seed(1)
+folds <- sample(1:k, nrow(Hitters), replace=TRUE) # make folds
+
+cv.errors <- matrix(NA,k,19, dimnames=list(NULL, paste(1:19)))
+
+# cross-validation loop, loops through all folds
+for(j in 1:k)
+{
+  best.fit <- regsubsets (Salary ~. , data = Hitters[folds != j , ] ,  nvmax =19) 
+  for(i in 1:19)
+  {
+    pred=predict(best.fit,Hitters[folds==j,],id=i) 
+    cv.errors[j,i]<- mean( (Hitters$Salary[folds==j]-pred)^2)
+  }
+}
+
+# Looking at the results
+mean.cv.errors <- apply(cv.errors ,2,mean)
+mean.cv.errors
+par(mfrow=c(1,1))
+plot(mean.cv.errors ,type='b')
+
+which.min(mean.cv.errors)
+reg.best=regsubsets (Salary~.,data=Hitters , nvmax=19)
+coef(reg.best ,which.min(mean.cv.errors))
+```
+
+With 10-fold cross-validation, the lowest MSE was with 10 folds. 
+
+
+

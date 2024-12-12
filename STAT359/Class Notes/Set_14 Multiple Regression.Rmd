@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Multiple Regression
+# Multiple Regression
 
 Now, we have multiple variables that we believe might influence $Y$.
 $$Y_i=\beta_0+\beta_1x_{1i}+....+\beta_2x_{2i}+\epsilon_i$$

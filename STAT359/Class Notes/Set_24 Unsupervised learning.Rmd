@@ -1,0 +1,136 @@
+---
+title: "Set_24 Unsupervised learning"
+author: "Alexander Williams"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Unsupervised Learning
+
+What if we have a set of variables $ x_1,...,X_p$, but no $Y$. How can we find patterns in $X$?
+
+Unsupervised learning is exploratory, and it's also more subjective. The two main techniques are dimension reduction, and clustering.
+
+**This isn't prediction, this is primarily for visualization and better understanding.**
+
+
+Let's remember how principle component regression, PCR works. We find the direction with the most variance, then continue by finding directions with most variance orthogonal to the rest.
+$$z_{i1}=\sum_{j=1}^p\phi_{1j}x_{ip}$$
+for $i=1,...,n$.
+
+We can actually find the principle component much easier, as they're the eigenvectors. We just find those, and we're good to go.
+
+Once we have them, we plot them against each other in low-dimensional data to try to identify patterns.
+
+___
+
+# Example
+
+This time we're looking at a database of arrests in the US. This is unsupervised, so we're not predicting anything.
+
+```{r}
+states = row.names(USArrests)
+states
+names(USArrests)
+
+# means of each variable
+apply(USArrests , 2, mean)
+
+# variance of each variable
+apply(USArrests , 2, var)
+
+# principle component analysis.
+# It's important to scale each component, so that the variance of each one is equal to 1.
+pr.out=prcomp(USArrests, scale=TRUE)
+names(pr.out)
+
+pr.out$center
+pr.out$scale
+pr.out$rotation
+```
+
+If we multiply the data matrix $X$ by that rotation matrix, we get the principle component scores. the rotation matrix *rotates* the data into the coordinate system of the principle components/eigenvectors
+
+```{r}
+dim(pr.out$x)
+biplot(pr.out, cex =0.5,scale=0)
+```
+
+this is mirrored compared to the example above, we can fix that by swapping the signs on the rotation matrix
+
+```{r}
+pr.out$rotation=-pr.out$rotation 
+pr.out$x=-pr.out$x
+biplot(pr.out,cex = 0.5, scale=0)
+```
+
+This plot is a bit weird to read, but the key takeaway is that *points that are close to each other have similar attributes*. This won't tell you exactly what they are, but it can help us find patterns.
+
+```{r}
+pr.out$sdev
+pr.var=pr.out$sdev^2
+pr.var
+
+# Get the proportion of variance, to see how variance changes as we increase the number of principle components
+pve=pr.var/sum(pr.var)
+plot(pve, 
+     xlab = 'Principal Component', 
+     ylab = 'Proportion of Variance', 
+     ylim = c(0,1), 
+     type = 'b')
+
+# cumsum == "cumulative sum"
+plot(cumsum(pve), 
+     xlab="Principal Component ", 
+     ylab=" Cumulative Proportion of Variance Explained ", 
+     ylim=c(0,1), type='b')
+
+```
+
+___
+
+# Clustering: K-means
+
+Also covered in SENG474 notes, with more details but no implementation.
+
+The goal of clustering is to see which datapoints are similar to each other. They may form groups of similar points. Clustering is a way to identify these distinct groups
+
+Given $n$ points with $p$ dimensions, represented in a $n\times{}p$ matrix.
+
+K-means clustering creates $K$ groups in the data, assigning every point to a cluster. The goal is to reduce variability in each cluster.
+
+Let $W(C_k)$ denote the degree that observations in a cluster $C_k$ differ from one another. This means the goal of K-mean is to minimize the sum of all $W(C_k)$.
+
+There's a number of ways to define the function $W()$. The simplest is to compute the average distance. Get the distance from every point in a cluster to every other point, square their distance, and take the sum of them all.
+
+here's the basic idea of the algorithm:
+
+1. place $K$ points in the data space. These will be the centroids of each cluster
+
+2. Place every datapoint in a cluster depending on their closest centroid.
+
+3. Move each centroid to the center of all points in its cluster
+
+4. Repeat until no points change clusters. At this point, the algorithm is complete.
+
+**Different method**
+
+1. Assign every point to one of $K$ groups entirely at random
+
+2. Compute the centroid of each group
+
+3. move each datapoint into the cluster of the closest centroid
+
+4. Repeat until no points change clusters.
+
+Note that while this algorithm will always converge, it may only converge to a local optimum, not the global optimum.
+
+
+
+
+
+
