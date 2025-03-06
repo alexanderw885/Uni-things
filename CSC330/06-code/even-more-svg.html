@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+</head>
+
+<body>
+    <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Reference axes -->
+        <line x1="0" y1="150" x2="400" y2="150" stroke="gray" stroke-dasharray="5,5"/>
+        <line x1="200" y1="0" x2="200" y2="300" stroke="gray" stroke-dasharray="5,5"/>
+        
+        <!-- Original Rectangle (No Transform) -->
+        <rect x="50" y="50" width="60" height="40" fill="lightblue" stroke="black"/>
+        <text x="50" y="45" font-family="Arial" font-size="12" fill="black">Original</text>
+        
+        <!-- Transformed Rectangle (Rotated around 0,0) -->
+        <rect x="50" y="50" width="60" height="40" fill="lightcoral" stroke="black" transform="rotate(30)"/>
+        <text x="80" y="120" font-family="Arial" font-size="12" fill="black">rotate(30)</text>
+        
+        <!-- Transformed Rectangle (Rotated around center (200,150)) -->
+        <rect x="50" y="50" width="60" height="40" fill="lightgreen" stroke="black" transform="translate(200,150) rotate(30) translate(-200,-150)"/>
+        <text x="220" y="170" font-family="Arial" font-size="12" fill="black">rotate(30) around (200,150)</text>
+    </svg>
+</body>
+
+</html>

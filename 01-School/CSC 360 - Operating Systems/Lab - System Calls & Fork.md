@@ -2,7 +2,7 @@
 system calls change mode from user mode to kernel code
 
 `fork()`
-creates child process, in [[processes]]
+creates child process, in [[Processes]]
 `man 2 fork()`
 
 `exec*()`

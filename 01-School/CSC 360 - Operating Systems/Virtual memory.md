@@ -1,4 +1,4 @@
-not all [pages](Memory%20Basics) need to be in memory at the same time, only parts at a time
+not all [pages](Memory%20Basics.md) need to be in memory at the same time, only parts at a time
 
 Programs can have larger virtual memory address space than physical
 each process is only using fraction of total address space
