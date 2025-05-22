@@ -39,7 +39,7 @@ select class, group by class
 | CSC 370 |
 
 ### Aggregate Functions
-what happens to the other attributes that are1ot part of the key used in `GROUP BY`?
+what happens to the other attributes that are not part of the key used in `GROUP BY`?
 we need some way to take a group of values, and return only a single value
 ex. min. max, avg, sum, count, any...
 ```sql
