@@ -1,3 +1,0 @@
-0.7559 s1file.txt
-0.3113 file1.txt
-0.2860 file2.txt

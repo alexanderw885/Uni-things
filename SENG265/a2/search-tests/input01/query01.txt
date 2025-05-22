@@ -1,3 +1,0 @@
-bike 1
-book 1
-hous 1

@@ -1,3 +1,0 @@
-bu 1
-scooter 1
-transit 1

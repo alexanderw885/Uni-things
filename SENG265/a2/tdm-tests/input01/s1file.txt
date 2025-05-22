@@ -1,3 +1,0 @@
-bike 3
-boat 2
-hous 1

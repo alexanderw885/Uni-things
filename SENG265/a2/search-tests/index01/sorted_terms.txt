@@ -1,6 +1,0 @@
-bike
-boat
-car
-hous
-scooter
-truck

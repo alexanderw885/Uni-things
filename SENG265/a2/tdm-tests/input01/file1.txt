@@ -1,3 +1,0 @@
-car 10
-hous 5
-truck 2

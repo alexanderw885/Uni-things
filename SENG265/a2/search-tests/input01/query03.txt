@@ -1,5 +1,0 @@
-boat 1
-hous 1
-pier 1
-sea 1
-view 1
