@@ -1,0 +1,21 @@
+# Package manager
+conda install pip
+
+# Jupyter notebook support
+conda install notebook
+
+# Qiskit and quantum simulation
+pip install qiskit
+pip install qiskit-aer
+pip install qiskit-ibm-runtime
+
+# Visualization
+conda install matplotlib
+pip install pylatexenc  # required for circuit.draw(output='mpl')
+pip install charset_normalizer  # resolves requests warning
+
+# PennyLane
+pip install pennylane
+
+# Numerical computation
+conda install numpy
