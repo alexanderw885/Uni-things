@@ -98,6 +98,7 @@ Due date is the evening before the presentation
 	- don't need to submit entire code. Could put it in appendix if wanted
 	- good idea to reference UML diagrams
 	- cache optimization, vectorization, software pipelining, ...
+	- what steps followed to ensure safe C code (MISRA, preferably BARR). want 3-5 techniques
 5. Compilation and assembly:
 	- about 1 page
 	- show compiler arguments

@@ -1,0 +1,14 @@
+void main() {
+    int c;
+    c = mult(sum(2,2),2);
+}
+
+int sum(int a, int b, int sum) {
+    sum = a + b;
+    return sum;
+}
+
+int mult(int a, int b) {
+    int result = a * b;
+    return result;
+}
