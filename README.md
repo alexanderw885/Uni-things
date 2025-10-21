@@ -5,4 +5,4 @@ All notes taken in Obsidian, using markdown for text formatting.
 Also has LaTeX for equations
 
 
-Along with notes, contains assignments and resources used for classes, labelled under appropriate class files
+Along with notes, resources used for classes labelled under appropriate class files
